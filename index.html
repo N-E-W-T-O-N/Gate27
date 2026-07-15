@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>GATE 2027 — DA + ST Prep Plan</title>
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --card: #ffffff;
+    --ink: #1a1a1a;
+    --muted: #5f6368;
+    --accent: #b04a2f;
+    --accent-soft: #fdeee8;
+    --line: #e4e2dd;
+    --good: #2e7d32;
+    --warn: #b26a00;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a;
+      --card: #1d2026;
+      --ink: #e8e6e3;
+      --muted: #9aa0a6;
+      --accent: #e8845f;
+      --accent-soft: #33241e;
+      --line: #2c3038;
+      --good: #7bc47f;
+      --warn: #e0a94f;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Georgia, 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+  header { text-align: center; padding: 2.5rem 0 1.5rem; border-bottom: 3px double var(--line); margin-bottom: 2rem; }
+  header h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); margin: 0 0 .25rem; letter-spacing: .01em; }
+  header .sub { color: var(--muted); font-style: italic; }
+  #countdown {
+    display: inline-block; margin-top: 1rem; padding: .5rem 1.25rem;
+    background: var(--accent-soft); color: var(--accent);
+    border-radius: 999px; font-family: 'Segoe UI', system-ui, sans-serif;
+    font-weight: 600; font-size: .95rem;
+  }
+  h2 {
+    font-size: 1.25rem; margin: 2.5rem 0 .75rem;
+    border-bottom: 1px solid var(--line); padding-bottom: .35rem;
+  }
+  h2 .num { color: var(--accent); margin-right: .5rem; }
+  .card {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 10px; padding: 1rem 1.25rem; margin: .75rem 0;
+  }
+  .callout { border-left: 4px solid var(--accent); }
+  .tablewrap { overflow-x: auto; }
+  table {
+    border-collapse: collapse; width: 100%; font-size: .92rem;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  th, td { border: 1px solid var(--line); padding: .5rem .65rem; text-align: left; vertical-align: top; }
+  th { background: var(--accent-soft); color: var(--accent); }
+  ul { padding-left: 1.3rem; }
+  li { margin: .3rem 0; }
+  .muted { color: var(--muted); font-size: .9rem; }
+  .rule { font-weight: 700; color: var(--accent); }
+  label.check {
+    display: flex; gap: .6rem; align-items: baseline; padding: .3rem 0;
+    cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif; font-size: .95rem;
+  }
+  label.check input { accent-color: var(--accent); }
+  label.check.done span { text-decoration: line-through; color: var(--muted); }
+  .pill { font-family: 'Segoe UI', sans-serif; font-size: .75rem; padding: .1rem .5rem; border-radius: 999px; background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem; text-align: center; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>GATE 2027 Prep Plan</h1>
+  <div class="sub">DA (Data Science &amp; AI, primary) + ST (Statistics, secondary)</div>
+  <div id="countdown">…</div>
+</header>
+
+<section class="card callout">
+  <strong>The one-line strategy:</strong> optimize for a DA score of <strong>65+/100</strong>. Single-digit rank is the stretch goal; top-200 (IISc / IIT-B/D/M interview range) is the floor if the plan holds. ST is a bonus paper funded by the shared math core — <span class="rule">never at DA's expense</span>.
+</section>
+
+<h2><span class="num">1</span>Why this plan looks like this</h2>
+<div class="card">
+  <p>Previous best: ~25–30 marks — qualified, no rank. The three killers, and the fix baked in for each:</p>
+  <ul>
+    <li><strong>Incomplete syllabus</strong> → hard checkpoint dates per block; overrun cuts <em>depth</em>, never pushes dates; coverage freeze <strong>Dec 27</strong>.</li>
+    <li><strong>Too few mocks, no analysis</strong> → subject mock at every block's end; full mocks from Nov 1; every mock gets a 2-hour autopsy.</li>
+    <li><strong>Speed / silly mistakes</strong> → weekdays are practice-only; error log tags every lost mark <em>concept / calculation / misread</em>; January drills the log, not textbooks.</li>
+  </ul>
+  <p class="muted">Weak subjects (Prob &amp; Stats, LinAlg &amp; Calculus, ML/DL) are scheduled first, at ST depth where syllabi overlap. Strengths (Python/DSA/DBMS) go last as a speed-pass.</p>
+</div>
+
+<h2><span class="num">2</span>Time budget — the binding constraint</h2>
+<div class="card">
+  <p>~12–15 hrs/week: 1–1.5 hr weekdays (unpredictable) + 6–8 hrs weekends.</p>
+  <ul>
+    <li><strong>Weekends are the engine.</strong> Two theory blocks, each ending with 30–45 min of problems. The weekend alone is the <em>minimum viable week</em> — coverage advances even if every weekday collapses.</li>
+    <li><strong>Weekdays are practice only.</strong> Never new theory. PYQs on the current block + 2 GA questions daily.</li>
+    <li><strong>GA (15 marks) never gets a study block</strong> — daily 2-question habit + GA sections of every mock.</li>
+  </ul>
+</div>
+
+<h2><span class="num">3</span>Priority rule (DA &gt; ST)</h2>
+<div class="card callout">
+  <p>~75% of hours serve DA (incl. the shared core); ~25% are ST-only. If a block overruns, sacrifice in this order:</p>
+  <p style="text-align:center; font-family:'Segoe UI',sans-serif;">
+    multivariate → non-parametrics → stochastic processes → AI tail topics → <span class="rule">never DA core</span>
+  </p>
+  <p class="muted">ST-only topics demoted to PYQ-only from day one: multivariate analysis, non-parametric statistics.</p>
+</div>
+
+<h2><span class="num">4</span>Calendar</h2>
+<div class="tablewrap card">
+<table>
+  <thead><tr><th>Window</th><th>Block</th><th>Serves</th><th>Checkpoint</th></tr></thead>
+  <tbody>
+    <tr><td>Jul 15 – Sep 6</td><td>Probability + standard distributions <strong>at ST depth</strong></td><td>Both</td><td>Subject mock (mixed DA+ST)</td></tr>
+    <tr><td>Sep 7 – Oct 4</td><td>Matrix theory / Linear Algebra + Calculus &amp; Optimization</td><td>Both</td><td>Subject mock</td></tr>
+    <tr><td>Oct 5 – Nov 15</td><td>Machine Learning + DL basics + Regression Analysis</td><td>Both</td><td><strong>First full DA mock ~Nov 1</strong> (baseline)</td></tr>
+    <tr><td>Nov 16 – Dec 6</td><td>ST core: estimation + hypothesis testing (full depth), stochastic processes (light)</td><td>ST</td><td>First full ST mock</td></tr>
+    <tr><td>Dec 7 – Dec 27</td><td>AI (search, logic, uncertainty) + Python/DSA/DBMS/warehousing speed-pass</td><td>DA</td><td>Subject mock · <strong>coverage freeze Dec 27</strong></td></tr>
+    <tr><td>Dec 28 – Jan 17</td><td>PYQs both papers; full mocks fortnightly, 2 DA : 1 ST</td><td>Both</td><td>DA mocks ≥ 45–50</td></tr>
+    <tr><td>Jan 18 – exam</td><td>Weekly mocks (2 DA : 1 ST), error-log drilling, formula sheets</td><td>Both</td><td>DA mocks ≥ 60</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="card">
+  <strong>Score trajectory:</strong> Nov 1 baseline ~30–35 → late Dec ~45–50 → mid Jan ~60+.
+  <span class="muted">If a checkpoint misses by &gt;10 marks: narrow scope (drop ST fulls, drop tail topics) — don't invent hours that don't exist.</span>
+</div>
+
+<h2><span class="num">5</span>Milestones <span class="pill">saved in this browser</span></h2>
+<div class="card" id="milestones">
+  <label class="check"><input type="checkbox" data-k="m1"><span><strong>Sep 6</strong> — Probability &amp; distributions done + subject mock taken</span></label>
+  <label class="check"><input type="checkbox" data-k="m2"><span><strong>Sep 30</strong> — Enrolled in a paid DA test series (GO Classes / PW / Made Easy)</span></label>
+  <label class="check"><input type="checkbox" data-k="m3"><span><strong>Oct 4</strong> — LinAlg + Calculus done + subject mock taken</span></label>
+  <label class="check"><input type="checkbox" data-k="m4"><span><strong>Nov 1</strong> — First full DA mock (baseline) + 2-hr autopsy logged</span></label>
+  <label class="check"><input type="checkbox" data-k="m5"><span><strong>Nov 15</strong> — ML + regression done + subject mock taken</span></label>
+  <label class="check"><input type="checkbox" data-k="m6"><span><strong>Dec 6</strong> — ST core done + first full ST mock</span></label>
+  <label class="check"><input type="checkbox" data-k="m7"><span><strong>Dec 27</strong> — Coverage freeze: AI + Python/DSA/DBMS pass complete</span></label>
+  <label class="check"><input type="checkbox" data-k="m8"><span><strong>Late Dec</strong> — DA mock ≥ 45</span></label>
+  <label class="check"><input type="checkbox" data-k="m9"><span><strong>Mid Jan</strong> — DA mock ≥ 60</span></label>
+  <label class="check"><input type="checkbox" data-k="m10"><span><strong>Registration (Aug–Sep)</strong> — Registered DA primary + ST secondary; re-verified 2027 two-paper table</span></label>
+</div>
+
+<h2><span class="num">6</span>Mocks</h2>
+<div class="card">
+  <ul>
+    <li>Subject mock at the end of every block (test-series subject tests or PYQ-assembled).</li>
+    <li>Full DA mocks: baseline Nov 1 → fortnightly through Dec → weekly in Jan (~6–7 total).</li>
+    <li>Full ST mocks: first in early Dec, then 1 per 2 DA mocks (~3–4 total). <span class="rule">Drop ST fulls first if behind.</span></li>
+    <li>Paid DA test series by end of September (~₹1.5–3k). Add an ST series only if December ST mocks look competitive.</li>
+    <li><strong>Every mock → 2-hour autopsy before the next:</strong> every lost mark tagged <em>concept / calculation / misread</em> in one running error log. January revision drills this log.</li>
+  </ul>
+</div>
+
+<h2><span class="num">7</span>Resources</h2>
+<div class="card">
+  <p><strong>Shared core (Prob/Stats, LinAlg, Calculus)</strong></p>
+  <ul>
+    <li><strong>Probability:</strong> Harvard Stat 110 (Joe Blitzstein, YouTube) for intuition → GO Classes DA probability playlist for GATE-style problems. Book: Sheldon Ross, <em>A First Course in Probability</em> (selected chapters).</li>
+    <li><strong>Statistics (both papers):</strong> Gupta &amp; Kapoor, <em>Fundamentals of Mathematical Statistics</em> — the main stats book. Casella &amp; Berger only as reference.</li>
+    <li><strong>Linear Algebra:</strong> 3Blue1Brown <em>Essence of Linear Algebra</em> → Gilbert Strang MIT 18.06 (selected) → GO Classes LA playlist. Practice: CS + DA + ST PYQs.</li>
+    <li><strong>Calculus &amp; Optimization:</strong> 3Blue1Brown <em>Essence of Calculus</em>; gradient descent/convexity via ML materials. Thin topic — don't over-invest.</li>
+  </ul>
+  <p><strong>DA-specific</strong></p>
+  <ul>
+    <li><strong>ML/DL:</strong> StatQuest for first-pass concepts; NPTEL <em>Introduction to Machine Learning</em> (Balaraman Ravindran, IIT-M) for rigor; <em>Introduction to Statistical Learning</em> (free PDF) — regression, classification, resampling, trees, SVM, clustering.</li>
+    <li><strong>AI:</strong> Russell &amp; Norvig — search, logic, uncertainty chapters only; NPTEL <em>AI: Search Methods for Problem Solving</em> (Deepak Khemani).</li>
+    <li><strong>Python/DSA/DBMS:</strong> GATE CS PYQs (heavy overlap); Knowledge Gate or GO Classes DBMS playlists for gaps; short GATE-DA warehousing playlist.</li>
+  </ul>
+  <p><strong>ST-specific</strong></p>
+  <ul>
+    <li><strong>Estimation &amp; testing:</strong> Gupta &amp; Kapoor (above).</li>
+    <li><strong>Stochastic processes:</strong> Sheldon Ross, <em>Introduction to Probability Models</em> — Markov chain + Poisson process chapters; NPTEL Stochastic Processes lectures.</li>
+    <li><strong>ST PYQs 2019–2026</strong> — the single best resource for ST-only topics.</li>
+  </ul>
+  <p><strong>Question banks:</strong> official DA papers (2024–2026), ST papers (2019–2026), overlapping CS PYQ topics; GATE Overflow (free, has a DA section).</p>
+</div>
+
+<h2><span class="num">8</span>Risks</h2>
+<div class="card">
+  <ul>
+    <li><strong>Time budget is the #1 risk.</strong> 12–15 unpredictable hrs/week makes single-digit rank a long shot; the plan protects the score <em>floor</em> (top-200 + strong score) even in partial success.</li>
+    <li><strong>ST dilution</strong> is capped by the 75/25 split and the sacrifice order.</li>
+    <li><strong>GATE 2027 specifics</strong> (exact dates, organizing institute, syllabus tweaks, two-paper table) publish ~Aug–Sep 2026 — re-verify at registration.</li>
+  </ul>
+</div>
+
+<h2><span class="num">9</span>Goal beyond the exam</h2>
+<div class="card">
+  <ul>
+    <li><strong>M.Tech DS/AI</strong> at IISc / top IITs via DA rank.</li>
+    <li><strong>NUS/NTU</strong> via GATE score → targets the <strong>2028 intake</strong> (applications late 2027; IELTS needed). Post-exam workstream.</li>
+    <li>Registration: <strong>DA primary + ST secondary</strong> — allowed per the official GATE two-paper combination table.</li>
+  </ul>
+</div>
+
+<footer>
+  Plan drafted 15 July 2026 · Exam expected first two weekends of February 2027 · Milestone checkboxes are stored only in this browser (localStorage)
+</footer>
+
+</div>
+
+<script>
+(function () {
+  // Countdown — GATE 2027 expected window opens ~Feb 6, 2027 (update when official dates publish)
+  var exam = new Date(2027, 1, 6);
+  function tick() {
+    var days = Math.ceil((exam - new Date()) / 86400000);
+    document.getElementById('countdown').textContent = days > 0
+      ? days + ' days to the expected exam window (Feb 6, 2027)'
+      : 'Exam window reached — go get it.';
+  }
+  tick();
+  setInterval(tick, 3600000);
+
+  // Milestone persistence
+  var KEY = 'gate27-milestones';
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  document.querySelectorAll('#milestones input[type=checkbox]').forEach(function (cb) {
+    var k = cb.dataset.k;
+    cb.checked = !!saved[k];
+    cb.parentElement.classList.toggle('done', cb.checked);
+    cb.addEventListener('change', function () {
+      saved[k] = cb.checked;
+      localStorage.setItem(KEY, JSON.stringify(saved));
+      cb.parentElement.classList.toggle('done', cb.checked);
+    });
+  });
+})();
+</script>
+</body>
+</html>
