@@ -119,6 +119,25 @@
   .pill { font-family: 'Segoe UI', sans-serif; font-size: .75rem; padding: .1rem .5rem; border-radius: 999px; background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
   #progressbar { height: 8px; background: var(--line); border-radius: 999px; overflow: hidden; margin: .5rem 0 1rem; }
   #progressbar > div { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+  /* toppers slideshow */
+  #carousel { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 1.5rem 3.2rem 3rem; margin: .75rem 0; min-height: 15rem; }
+  .slide { display: none; text-align: center; animation: fadein .45s ease; }
+  .slide.active { display: block; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .slide .who { font-family: 'Segoe UI', system-ui, sans-serif; font-weight: 700; font-size: 1.05rem; color: var(--accent); }
+  .slide .tag { font-family: 'Segoe UI', sans-serif; font-size: .8rem; color: var(--muted); margin-bottom: .75rem; }
+  .slide blockquote { font-style: italic; font-size: 1.05rem; margin: .75rem auto; max-width: 560px; }
+  .slide .lesson { font-family: 'Segoe UI', sans-serif; font-size: .88rem; max-width: 560px; margin: .5rem auto 0; padding: .55rem .9rem; background: var(--accent-soft); color: var(--accent); border-radius: 8px; }
+  .cbtn {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: none; border: 1px solid var(--line); color: var(--muted);
+    border-radius: 50%; width: 2.1rem; height: 2.1rem; cursor: pointer; font-size: 1.1rem; line-height: 1;
+  }
+  .cbtn:hover { color: var(--accent); border-color: var(--accent); }
+  #cprev { left: .7rem; } #cnext { right: .7rem; }
+  #cdots { position: absolute; bottom: 1rem; left: 0; right: 0; text-align: center; }
+  #cdots button { width: .6rem; height: .6rem; border-radius: 50%; border: none; background: var(--line); margin: 0 .22rem; cursor: pointer; padding: 0; }
+  #cdots button.on { background: var(--accent); }
   footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem; text-align: center; }
   a { color: var(--accent); }
 </style>
@@ -456,6 +475,28 @@
     <li><strong>ST PYQs 2019–2026</strong> — the single best resource for ST-only topics.</li>
   </ul>
   <p><strong>Question banks:</strong> official DA papers (2024–2026), ST papers (2019–2026), overlapping CS PYQ topics; GATE Overflow (free, has a DA section).</p>
+
+  <details class="blk">
+    <summary>Subject-wise book list — with my take</summary>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Subject</th><th>Book</th><th>My take</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="2">Probability</td><td>Sheldon Ross, <em>A First Course in Probability</em></td><td>The best problem sets in the business. Read chapters 1–7 selectively — the problems, not the prose, are the point.</td></tr>
+        <tr><td>Gupta &amp; Kapoor, <em>Fundamentals of Mathematical Statistics</em></td><td>The workhorse for BOTH papers. Dated typography, occasionally hand-wavy proofs, but everything GATE asks is in here. Your single most-used book.</td></tr>
+        <tr><td>Statistics / inference (ST)</td><td>Casella &amp; Berger or Rohatgi, <em>Statistical Inference</em></td><td>Reference only — open when G&amp;K hand-waves sufficiency, completeness, or UMVUE. Reading it cover-to-cover on your schedule would be a mistake.</td></tr>
+        <tr><td>Stochastic processes (ST)</td><td>Sheldon Ross, <em>Introduction to Probability Models</em></td><td>Chapters 4–5 (Markov chains, Poisson process) only. It's a light pass in this plan — resist the book's charm, it's a rabbit hole.</td></tr>
+        <tr><td>Linear Algebra</td><td>Gilbert Strang, <em>Introduction to Linear Algebra</em></td><td>Honestly: watch his 18.06 lectures instead of reading. Use the book only for exercises after 3Blue1Brown builds the intuition.</td></tr>
+        <tr><td>ML</td><td><em>Introduction to Statistical Learning</em> (ISLR, free PDF)</td><td>Exactly GATE depth — rigorous enough, never grad-school heavy. Skip the R/Python labs entirely; do PYQs instead.</td></tr>
+        <tr><td>AI</td><td>Russell &amp; Norvig, <em>AIMA</em></td><td>Only the search, logic, and uncertainty chapters (~3–5, 7–9, 13–14). It's a 1000-page book and GATE asks from ~150 of them.</td></tr>
+        <tr><td rowspan="2">DA practice / PYQ</td><td>Made Easy <em>GATE DA Practice Book</em> or GKP <em>DA Study Guide (2600+ Qs)</em></td><td>Buy exactly ONE — they overlap heavily and your constraint is hours, not questions. This feeds your weekday practice slots.</td></tr>
+        <tr><td>IFAS <em>GATE DA PYQ</em> (topic-wise)</td><td>Only 3 years of DA PYQs exist, so any PYQ book is thin. Free alternative: PracticePaper / GATE Overflow's topic-wise DA sets do the same job.</td></tr>
+        <tr><td>ST practice / PYQ</td><td>IFAS <em>GATE Statistics PYQ</em> (2019–2024, topic-wise)</td><td>The best ST purchase — ST PYQs ARE your main ST resource, and topic-wise sorting saves precious hours. B.L. Agarwal's <em>Programmed Statistics</em> is a decent extra problem bank if you finish these.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="muted">Rule of thumb: textbooks for the first pass, exactly one practice book per paper, PYQs above everything. If a purchase doesn't map to a week in Section 6, don't buy it.</p>
+  </details>
   </div>
 </details>
 
@@ -468,6 +509,45 @@
     <li><strong>GATE 2027 specifics</strong> (exact dates, organizing institute, syllabus tweaks, two-paper table) publish ~Aug–Sep 2026 — re-verify at registration.</li>
     <li><strong>M.Tech DS/AI</strong> at IISc / top IITs via DA rank; <strong>NUS/NTU</strong> via GATE score targets the 2028 intake (applications late 2027; IELTS needed) — post-exam workstream.</li>
   </ul>
+  </div>
+</details>
+
+<details class="sec" open>
+  <summary><span class="num">11</span>What the toppers did <span class="pill">lessons from rank holders</span></summary>
+  <div class="body">
+  <div id="carousel">
+    <div class="slide active">
+      <div class="who">Nikhil Sadineni — AIR 1, GATE DA 2025</div>
+      <div class="tag">Full-time working professional (physician + IIT-M online BS in Data Science)</div>
+      <p>Studied <strong>3–4 hrs on weekdays, 8–10 hrs on weekends</strong> — almost exactly this plan's schedule. Used a structured course + test series, ranked top-10 in All-India mocks, and began dedicated revision ~Jan 10 from annotated notes.</p>
+      <blockquote>"Don't focus only on theory — solve enough questions. Practice matters more than you think."</blockquote>
+      <div class="lesson">Lesson for this plan: your schedule CAN produce AIR 1. The weekday practice-only rule is non-negotiable.</div>
+    </div>
+    <div class="slide">
+      <div class="who">Abraham Varghese — AIR 6, GATE DA</div>
+      <div class="tag">Consistency over intensity</div>
+      <p>Daily disciplined study beat occasional 12-hour marathons. His early mocks didn't even place him in the national top 50 — he kept the target locked on AIR 1 anyway and worked in three phases: foundations → advanced topics → revision + mocks.</p>
+      <blockquote>"What matters is the daily, relentless attempt."</blockquote>
+      <div class="lesson">Lesson for this plan: the Nov 1 baseline mock WILL hurt. That's expected. The trajectory matters, not the starting point.</div>
+    </div>
+    <div class="slide">
+      <div class="who">The number that matters</div>
+      <div class="tag">From topper roadmaps</div>
+      <p>Toppers consistently report that <strong>mock scores of 80–85 correspond to top-100 territory</strong> — single-digit rank lives above that. This plan's mid-Jan checkpoint of 60+ is the floor, not the destination: the January error-log drilling exists precisely to push 60 → 75+.</p>
+      <blockquote>"Aim for a mock test score of 80–85 to target a top AIR."</blockquote>
+      <div class="lesson">Lesson for this plan: after each January mock, the 2-hour autopsy is worth more than 2 hours of new study. Always.</div>
+    </div>
+    <div class="slide">
+      <div class="who">The common thread</div>
+      <div class="tag">Across every rank-holder interview</div>
+      <p>Three things appear in every single story: <strong>high question volume</strong> (practice beats theory polish), <strong>full 3-hour exam simulations</strong> at a desk in the real time-slot, and a <strong>dedicated final revision phase</strong> that drills weaknesses, not favorite topics. Hardest topics flagged by the AIR 1: SVD, hypothesis testing, SVM, normalization — all four have named weeks in Section 6.</p>
+      <div class="lesson">Lesson for this plan: the Jan 31 dress rehearsal in the real exam time-slot is sacred. Book the chair, silence the phone, full 3 hours.</div>
+    </div>
+    <button class="cbtn" id="cprev" aria-label="Previous slide">‹</button>
+    <button class="cbtn" id="cnext" aria-label="Next slide">›</button>
+    <div id="cdots"></div>
+  </div>
+  <p class="muted" style="text-align:center">Sources: GO Classes AIR-1 interview · Brilliantpala AIR-6 roadmap · Made Easy / GfG topper compilations. Auto-advances every 10s; hover to pause.</p>
   </div>
 </details>
 
@@ -562,6 +642,34 @@
     bar.style.width = Math.round(100 * done / weekBoxes.length) + '%';
   }
   updateBar();
+
+  // ---- Toppers slideshow ----
+  var slides = Array.prototype.slice.call(document.querySelectorAll('#carousel .slide'));
+  var dotsBox = document.getElementById('cdots');
+  var current = 0, timer = null;
+  slides.forEach(function (_, i) {
+    var d = document.createElement('button');
+    d.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    d.addEventListener('click', function () { show(i); restart(); });
+    dotsBox.appendChild(d);
+  });
+  var dots = dotsBox.children;
+  function show(i) {
+    current = (i + slides.length) % slides.length;
+    slides.forEach(function (s, j) { s.classList.toggle('active', j === current); });
+    for (var j = 0; j < dots.length; j++) dots[j].classList.toggle('on', j === current);
+  }
+  function restart() {
+    if (timer) clearInterval(timer);
+    timer = setInterval(function () { show(current + 1); }, 10000);
+  }
+  document.getElementById('cprev').addEventListener('click', function () { show(current - 1); restart(); });
+  document.getElementById('cnext').addEventListener('click', function () { show(current + 1); restart(); });
+  var box = document.getElementById('carousel');
+  box.addEventListener('mouseenter', function () { if (timer) clearInterval(timer); timer = null; });
+  box.addEventListener('mouseleave', restart);
+  show(0);
+  restart();
 })();
 </script>
 </body>
