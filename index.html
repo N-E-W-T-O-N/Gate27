@@ -16,6 +16,9 @@
     --line: #e4e2dd;
     --good: #2e7d32;
     --warn: #b26a00;
+    --c2: #2d6a8f;
+    --c2-soft: rgba(45, 106, 143, .22);
+    --accent-fill: rgba(176, 74, 47, .22);
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -28,6 +31,9 @@
       --line: #2c3038;
       --good: #7bc47f;
       --warn: #e0a94f;
+      --c2: #6fb3d9;
+      --c2-soft: rgba(111, 179, 217, .22);
+      --accent-fill: rgba(232, 132, 95, .22);
     }
   }
   * { box-sizing: border-box; }
@@ -38,8 +44,8 @@
     color: var(--ink);
     line-height: 1.6;
   }
-  .wrap { max-width: 880px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
-  header { text-align: center; padding: 2.5rem 0 1.5rem; border-bottom: 3px double var(--line); margin-bottom: 2rem; }
+  .wrap { max-width: 940px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+  header { text-align: center; padding: 2.5rem 0 1.5rem; border-bottom: 3px double var(--line); margin-bottom: 1.5rem; }
   header h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); margin: 0 0 .25rem; letter-spacing: .01em; }
   header .sub { color: var(--muted); font-style: italic; }
   #countdown {
@@ -48,11 +54,41 @@
     border-radius: 999px; font-family: 'Segoe UI', system-ui, sans-serif;
     font-weight: 600; font-size: .95rem;
   }
-  h2 {
-    font-size: 1.25rem; margin: 2.5rem 0 .75rem;
-    border-bottom: 1px solid var(--line); padding-bottom: .35rem;
+  #quotebox {
+    margin: 1.25rem auto 0; max-width: 640px; padding: 1rem 1.5rem;
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    font-style: italic; font-size: 1.02rem; min-height: 3.2rem;
   }
-  h2 .num { color: var(--accent); margin-right: .5rem; }
+  #quotebox .qa { display: block; margin-top: .35rem; font-style: normal; color: var(--muted); font-size: .85rem; font-family: 'Segoe UI', sans-serif; }
+  #newquote {
+    margin-top: .5rem; background: none; border: 1px solid var(--line); color: var(--muted);
+    border-radius: 999px; padding: .2rem .9rem; cursor: pointer;
+    font-family: 'Segoe UI', sans-serif; font-size: .78rem;
+  }
+  #newquote:hover { color: var(--accent); border-color: var(--accent); }
+  details.sec {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 10px; margin: .75rem 0; overflow: hidden;
+  }
+  details.sec > summary {
+    cursor: pointer; list-style: none; padding: .85rem 1.25rem;
+    font-size: 1.15rem; font-weight: 700; user-select: none;
+  }
+  details.sec > summary::-webkit-details-marker { display: none; }
+  details.sec > summary::before { content: '▸'; color: var(--accent); margin-right: .6rem; transition: transform .15s; display: inline-block; }
+  details.sec[open] > summary::before { transform: rotate(90deg); }
+  details.sec > summary .num { color: var(--accent); margin-right: .4rem; }
+  details.sec > .body { padding: 0 1.25rem 1.1rem; border-top: 1px solid var(--line); }
+  details.blk { border: 1px solid var(--line); border-radius: 8px; margin: .6rem 0; }
+  details.blk > summary {
+    cursor: pointer; list-style: none; padding: .55rem .9rem;
+    font-family: 'Segoe UI', system-ui, sans-serif; font-size: .95rem; font-weight: 600;
+    background: var(--accent-soft); color: var(--accent); border-radius: 8px;
+  }
+  details.blk[open] > summary { border-radius: 8px 8px 0 0; }
+  details.blk > summary::-webkit-details-marker { display: none; }
+  details.blk > summary::before { content: '▸ '; }
+  details.blk[open] > summary::before { content: '▾ '; }
   .card {
     background: var(--card); border: 1px solid var(--line);
     border-radius: 10px; padding: 1rem 1.25rem; margin: .75rem 0;
@@ -60,15 +96,20 @@
   .callout { border-left: 4px solid var(--accent); }
   .tablewrap { overflow-x: auto; }
   table {
-    border-collapse: collapse; width: 100%; font-size: .92rem;
+    border-collapse: collapse; width: 100%; font-size: .88rem;
     font-family: 'Segoe UI', system-ui, sans-serif;
   }
-  th, td { border: 1px solid var(--line); padding: .5rem .65rem; text-align: left; vertical-align: top; }
+  th, td { border: 1px solid var(--line); padding: .45rem .6rem; text-align: left; vertical-align: top; }
   th { background: var(--accent-soft); color: var(--accent); }
+  tr.done td { text-decoration: line-through; color: var(--muted); }
+  tr.done td:first-child { text-decoration: none; }
+  td.ck { text-align: center; }
+  td.ck input { accent-color: var(--accent); transform: scale(1.15); cursor: pointer; }
   ul { padding-left: 1.3rem; }
   li { margin: .3rem 0; }
   .muted { color: var(--muted); font-size: .9rem; }
   .rule { font-weight: 700; color: var(--accent); }
+  .mock { color: var(--warn); font-weight: 700; }
   label.check {
     display: flex; gap: .6rem; align-items: baseline; padding: .3rem 0;
     cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif; font-size: .95rem;
@@ -76,6 +117,8 @@
   label.check input { accent-color: var(--accent); }
   label.check.done span { text-decoration: line-through; color: var(--muted); }
   .pill { font-family: 'Segoe UI', sans-serif; font-size: .75rem; padding: .1rem .5rem; border-radius: 999px; background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+  #progressbar { height: 8px; background: var(--line); border-radius: 999px; overflow: hidden; margin: .5rem 0 1rem; }
+  #progressbar > div { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
   footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem; text-align: center; }
   a { color: var(--accent); }
 </style>
@@ -87,14 +130,19 @@
   <h1>GATE 2027 Prep Plan</h1>
   <div class="sub">DA (Data Science &amp; AI, primary) + ST (Statistics, secondary)</div>
   <div id="countdown">…</div>
+  <div id="quotebox">Loading a thought for today…<span class="qa"></span></div>
+  <button id="newquote">↻ another quote</button>
 </header>
 
-<section class="card callout">
+<div class="card callout">
   <strong>The one-line strategy:</strong> optimize for a DA score of <strong>65+/100</strong>. Single-digit rank is the stretch goal; top-200 (IISc / IIT-B/D/M interview range) is the floor if the plan holds. ST is a bonus paper funded by the shared math core — <span class="rule">never at DA's expense</span>.
-</section>
+  <div class="muted" style="margin-top:.4rem">Overall progress (weeks ticked below):</div>
+  <div id="progressbar"><div></div></div>
+</div>
 
-<h2><span class="num">1</span>Why this plan looks like this</h2>
-<div class="card">
+<details class="sec">
+  <summary><span class="num">1</span>Why this plan looks like this</summary>
+  <div class="body">
   <p>Previous best: ~25–30 marks — qualified, no rank. The three killers, and the fix baked in for each:</p>
   <ul>
     <li><strong>Incomplete syllabus</strong> → hard checkpoint dates per block; overrun cuts <em>depth</em>, never pushes dates; coverage freeze <strong>Dec 27</strong>.</li>
@@ -102,49 +150,263 @@
     <li><strong>Speed / silly mistakes</strong> → weekdays are practice-only; error log tags every lost mark <em>concept / calculation / misread</em>; January drills the log, not textbooks.</li>
   </ul>
   <p class="muted">Weak subjects (Prob &amp; Stats, LinAlg &amp; Calculus, ML/DL) are scheduled first, at ST depth where syllabi overlap. Strengths (Python/DSA/DBMS) go last as a speed-pass.</p>
-</div>
+  </div>
+</details>
 
-<h2><span class="num">2</span>Time budget — the binding constraint</h2>
-<div class="card">
+<details class="sec">
+  <summary><span class="num">2</span>Time budget — the binding constraint</summary>
+  <div class="body">
   <p>~12–15 hrs/week: 1–1.5 hr weekdays (unpredictable) + 6–8 hrs weekends.</p>
   <ul>
     <li><strong>Weekends are the engine.</strong> Two theory blocks, each ending with 30–45 min of problems. The weekend alone is the <em>minimum viable week</em> — coverage advances even if every weekday collapses.</li>
     <li><strong>Weekdays are practice only.</strong> Never new theory. PYQs on the current block + 2 GA questions daily.</li>
     <li><strong>GA (15 marks) never gets a study block</strong> — daily 2-question habit + GA sections of every mock.</li>
   </ul>
-</div>
+  </div>
+</details>
 
-<h2><span class="num">3</span>Priority rule (DA &gt; ST)</h2>
-<div class="card callout">
+<details class="sec">
+  <summary><span class="num">3</span>Priority rule (DA &gt; ST)</summary>
+  <div class="body">
   <p>~75% of hours serve DA (incl. the shared core); ~25% are ST-only. If a block overruns, sacrifice in this order:</p>
   <p style="text-align:center; font-family:'Segoe UI',sans-serif;">
     multivariate → non-parametrics → stochastic processes → AI tail topics → <span class="rule">never DA core</span>
   </p>
   <p class="muted">ST-only topics demoted to PYQ-only from day one: multivariate analysis, non-parametric statistics.</p>
-</div>
+  </div>
+</details>
 
-<h2><span class="num">4</span>Calendar</h2>
-<div class="tablewrap card">
-<table>
-  <thead><tr><th>Window</th><th>Block</th><th>Serves</th><th>Checkpoint</th></tr></thead>
-  <tbody>
-    <tr><td>Jul 15 – Sep 6</td><td>Probability + standard distributions <strong>at ST depth</strong></td><td>Both</td><td>Subject mock (mixed DA+ST)</td></tr>
-    <tr><td>Sep 7 – Oct 4</td><td>Matrix theory / Linear Algebra + Calculus &amp; Optimization</td><td>Both</td><td>Subject mock</td></tr>
-    <tr><td>Oct 5 – Nov 15</td><td>Machine Learning + DL basics + Regression Analysis</td><td>Both</td><td><strong>First full DA mock ~Nov 1</strong> (baseline)</td></tr>
-    <tr><td>Nov 16 – Dec 6</td><td>ST core: estimation + hypothesis testing (full depth), stochastic processes (light)</td><td>ST</td><td>First full ST mock</td></tr>
-    <tr><td>Dec 7 – Dec 27</td><td>AI (search, logic, uncertainty) + Python/DSA/DBMS/warehousing speed-pass</td><td>DA</td><td>Subject mock · <strong>coverage freeze Dec 27</strong></td></tr>
-    <tr><td>Dec 28 – Jan 17</td><td>PYQs both papers; full mocks fortnightly, 2 DA : 1 ST</td><td>Both</td><td>DA mocks ≥ 45–50</td></tr>
-    <tr><td>Jan 18 – exam</td><td>Weekly mocks (2 DA : 1 ST), error-log drilling, formula sheets</td><td>Both</td><td>DA mocks ≥ 60</td></tr>
-  </tbody>
-</table>
-</div>
-<div class="card">
-  <strong>Score trajectory:</strong> Nov 1 baseline ~30–35 → late Dec ~45–50 → mid Jan ~60+.
-  <span class="muted">If a checkpoint misses by &gt;10 marks: narrow scope (drop ST fulls, drop tail topics) — don't invent hours that don't exist.</span>
-</div>
+<details class="sec">
+  <summary><span class="num">4</span>Calendar — block view</summary>
+  <div class="body">
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Window</th><th>Block</th><th>Serves</th><th>Checkpoint</th></tr></thead>
+    <tbody>
+      <tr><td>Jul 15 – Sep 6</td><td>Probability + standard distributions <strong>at ST depth</strong></td><td>Both</td><td>Subject mock (mixed DA+ST)</td></tr>
+      <tr><td>Sep 7 – Oct 4</td><td>Matrix theory / Linear Algebra + Calculus &amp; Optimization</td><td>Both</td><td>Subject mock</td></tr>
+      <tr><td>Oct 5 – Nov 15</td><td>Machine Learning + DL basics + Regression Analysis</td><td>Both</td><td><strong>First full DA mock Nov 1</strong> (baseline)</td></tr>
+      <tr><td>Nov 16 – Dec 6</td><td>ST core: estimation + hypothesis testing (full depth), stochastic processes (light)</td><td>ST</td><td>First full ST mock</td></tr>
+      <tr><td>Dec 7 – Dec 27</td><td>AI (search, logic, uncertainty) + Python/DSA/DBMS/warehousing speed-pass</td><td>DA</td><td>Subject mock · <strong>coverage freeze Dec 27</strong></td></tr>
+      <tr><td>Dec 28 – Jan 17</td><td>PYQs both papers; weekly full mocks from Jan 10</td><td>Both</td><td>DA mocks ≥ 45–50</td></tr>
+      <tr><td>Jan 18 – exam</td><td>Weekly mocks (2 DA : 1 ST), error-log drilling, formula sheets</td><td>Both</td><td>DA mocks ≥ 60</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><strong>Score trajectory:</strong> Nov 1 baseline ~30–35 → late Dec ~45–50 → mid Jan ~60+.
+  <span class="muted">If a checkpoint misses by &gt;10 marks: narrow scope (drop ST fulls, drop tail topics) — don't invent hours that don't exist.</span></p>
+  </div>
+</details>
 
-<h2><span class="num">5</span>Milestones <span class="pill">saved in this browser</span></h2>
-<div class="card" id="milestones">
+<details class="sec">
+  <summary><span class="num">5</span>Syllabus map — overlap × complexity</summary>
+  <div class="body">
+  <p class="muted"><strong style="color:var(--accent)">Overlap</strong> = how much one study hour here serves <em>both</em> papers (10 = fully shared DA↔ST). <strong style="color:var(--c2)">Complexity</strong> = depth/effort the topic demands at GATE level (10 = hardest). How to read it: where both shapes are big (Prob &amp; Stats), every hour is expensive but pays twice — study first. Big blue with small orange (ML, AI) is a DA-only investment. Small blue (GA, Programming) is cheap marks.</p>
+
+  <div class="tablewrap" style="text-align:center">
+  <svg viewBox="0 0 500 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Radar chart of DA-ST overlap and complexity per subject" style="max-width:560px; width:100%; font-family:'Segoe UI',system-ui,sans-serif;">
+    <!-- grid rings (values 2,4,6,8,10) -->
+    <g fill="none" stroke="var(--line)">
+      <circle cx="250" cy="210" r="30"/>
+      <circle cx="250" cy="210" r="60"/>
+      <circle cx="250" cy="210" r="90"/>
+      <circle cx="250" cy="210" r="120"/>
+      <circle cx="250" cy="210" r="150"/>
+    </g>
+    <!-- axes -->
+    <g stroke="var(--line)">
+      <line x1="250" y1="210" x2="250" y2="60"/>
+      <line x1="250" y1="210" x2="356.1" y2="103.9"/>
+      <line x1="250" y1="210" x2="400" y2="210"/>
+      <line x1="250" y1="210" x2="356.1" y2="316.1"/>
+      <line x1="250" y1="210" x2="250" y2="360"/>
+      <line x1="250" y1="210" x2="143.9" y2="316.1"/>
+      <line x1="250" y1="210" x2="100" y2="210"/>
+      <line x1="250" y1="210" x2="143.9" y2="103.9"/>
+    </g>
+    <!-- ring value hints -->
+    <g fill="var(--muted)" font-size="9" text-anchor="middle">
+      <text x="250" y="176">4</text>
+      <text x="250" y="116">8</text>
+    </g>
+    <!-- complexity polygon (blue) : PS8 LA6 CO5 ML9 AI6 PR4 ST7 GA3 -->
+    <polygon points="250,90 313.6,146.4 325,210 345.5,305.5 250,300 207.6,252.4 145,210 218.2,178.2"
+             fill="var(--c2-soft)" stroke="var(--c2)" stroke-width="2"/>
+    <!-- overlap polygon (orange) : PS10 LA9 CO8 ML6 AI1 PR2 ST4 GA10 -->
+    <polygon points="250,60 345.5,114.5 370,210 313.6,273.6 250,225 228.8,231.2 190,210 143.9,103.9"
+             fill="var(--accent-fill)" stroke="var(--accent)" stroke-width="2"/>
+    <!-- overlap vertices -->
+    <g fill="var(--accent)">
+      <circle cx="250" cy="60" r="3.5"><title>Prob &amp; Stats — overlap 10/10</title></circle>
+      <circle cx="345.5" cy="114.5" r="3.5"><title>Linear Algebra — overlap 9/10</title></circle>
+      <circle cx="370" cy="210" r="3.5"><title>Calculus &amp; Optimization — overlap 8/10</title></circle>
+      <circle cx="313.6" cy="273.6" r="3.5"><title>ML + Regression — overlap 6/10</title></circle>
+      <circle cx="250" cy="225" r="3.5"><title>AI — overlap 1/10</title></circle>
+      <circle cx="228.8" cy="231.2" r="3.5"><title>Programming/DSA/DBMS — overlap 2/10</title></circle>
+      <circle cx="190" cy="210" r="3.5"><title>ST core — overlap 4/10</title></circle>
+      <circle cx="143.9" cy="103.9" r="3.5"><title>Aptitude (GA) — overlap 10/10</title></circle>
+    </g>
+    <!-- complexity vertices -->
+    <g fill="var(--c2)">
+      <circle cx="250" cy="90" r="3.5"><title>Prob &amp; Stats — complexity 8/10</title></circle>
+      <circle cx="313.6" cy="146.4" r="3.5"><title>Linear Algebra — complexity 6/10</title></circle>
+      <circle cx="325" cy="210" r="3.5"><title>Calculus &amp; Optimization — complexity 5/10</title></circle>
+      <circle cx="345.5" cy="305.5" r="3.5"><title>ML + Regression — complexity 9/10</title></circle>
+      <circle cx="250" cy="300" r="3.5"><title>AI — complexity 6/10</title></circle>
+      <circle cx="207.6" cy="252.4" r="3.5"><title>Programming/DSA/DBMS — complexity 4/10</title></circle>
+      <circle cx="145" cy="210" r="3.5"><title>ST core — complexity 7/10</title></circle>
+      <circle cx="218.2" cy="178.2" r="3.5"><title>Aptitude (GA) — complexity 3/10</title></circle>
+    </g>
+    <!-- axis labels -->
+    <g fill="var(--ink)" font-size="12.5" font-weight="600">
+      <text x="250" y="48" text-anchor="middle">Prob &amp; Stats</text>
+      <text x="364" y="95" text-anchor="start">Linear Algebra</text>
+      <text x="408" y="207" text-anchor="start">Calc &amp;</text>
+      <text x="408" y="221" text-anchor="start">Optim.</text>
+      <text x="364" y="330" text-anchor="start">ML + Regression</text>
+      <text x="250" y="378" text-anchor="middle">AI</text>
+      <text x="136" y="330" text-anchor="end">Prog / DSA / DBMS</text>
+      <text x="92" y="207" text-anchor="end">ST core</text>
+      <text x="92" y="221" text-anchor="end">(est./test/stoch.)</text>
+      <text x="136" y="95" text-anchor="end">Aptitude (GA)</text>
+    </g>
+  </svg>
+  </div>
+
+  <p style="text-align:center; font-family:'Segoe UI',sans-serif; font-size:.88rem;">
+    <span style="color:var(--accent); font-weight:700;">▬</span> DA↔ST overlap&nbsp;&nbsp;&nbsp;
+    <span style="color:var(--c2); font-weight:700;">▬</span> Complexity (effort needed)
+  </p>
+
+  <details class="blk">
+    <summary>Numbers behind the chart</summary>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Subject</th><th>Overlap /10</th><th>Complexity /10</th><th>Takeaway</th></tr></thead>
+      <tbody>
+        <tr><td>Probability &amp; Statistics</td><td>10</td><td>8</td><td>Heart of both papers — every hour pays twice. Scheduled first (W1–W8).</td></tr>
+        <tr><td>Linear Algebra</td><td>9</td><td>6</td><td>ST's "matrix theory" ≈ DA's LinAlg. Shared, moderate effort.</td></tr>
+        <tr><td>Calculus &amp; Optimization</td><td>8</td><td>5</td><td>Shared and thin — don't over-invest.</td></tr>
+        <tr><td>ML + Regression</td><td>6</td><td>9</td><td>Regression is shared; the rest is DA-only and the hardest climb. Biggest block (W13–W18).</td></tr>
+        <tr><td>ST core (estimation, testing, stochastic)</td><td>4</td><td>7</td><td>Mostly ST-only; hypothesis-testing depth feeds DA stats a little. First on the sacrifice list.</td></tr>
+        <tr><td>AI (search, logic, uncertainty)</td><td>1</td><td>6</td><td>DA-only. Concept-heavy but bounded — 2 weekends.</td></tr>
+        <tr><td>Programming / DSA / DBMS</td><td>2</td><td>4</td><td>DA-only but your day job — cheap marks, speed-pass in December.</td></tr>
+        <tr><td>Aptitude (GA)</td><td>10</td><td>3</td><td>15 marks in both papers, lowest effort — the daily 2-question habit.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </details>
+  </div>
+</details>
+
+<details class="sec" open>
+  <summary><span class="num">6</span>Week-by-week schedule <span class="pill">tick weeks as you finish</span></summary>
+  <div class="body">
+  <p class="muted">Weeks run Saturday→Friday. "Weekend" = the theory engine; "Weekdays" = practice only (plus 2 GA questions every day, always). Ticks are saved in this browser.</p>
+
+  <details class="blk" open>
+    <summary>Block 1 · Probability &amp; Statistics at ST depth (W1–W8, Jul 18 – Sep 11)</summary>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>✓</th><th>Wk</th><th>Dates</th><th>Weekend — theory</th><th>Weekdays — practice</th></tr></thead>
+      <tbody>
+        <tr><td class="ck"><input type="checkbox" data-k="w1"></td><td>1</td><td>Jul 18–24</td><td>Counting, probability axioms, conditional probability, Bayes' theorem. Stat 110 L1–6 · Ross Ch 1–3</td><td>DA/CS PYQs on basic probability</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w2"></td><td>2</td><td>Jul 25–31</td><td>Independence, random variables, PMF/CDF, expectation, variance. Stat 110 L7–10 · Ross Ch 4</td><td>PYQs: discrete RVs, expectation</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w3"></td><td>3</td><td>Aug 1–7</td><td>Discrete distributions: Bernoulli, Binomial, Geometric, Poisson, Hypergeometric. Stat 110 L11–13 · Gupta &amp; Kapoor</td><td>PYQs: distribution problems (DA+ST)</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w4"></td><td>4</td><td>Aug 8–14</td><td>Continuous RVs: Uniform, Exponential, Normal, Gamma, Beta; transformations. Stat 110 L14–18 · Ross Ch 5</td><td>PYQs: continuous distributions</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w5"></td><td>5</td><td>Aug 15–21</td><td>Joint/marginal/conditional distributions, covariance, correlation, conditional expectation. Stat 110 L19–22 · Ross Ch 6–7</td><td>PYQs: joint distributions (ST papers are gold here)</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w6"></td><td>6</td><td>Aug 22–28</td><td>MGFs, Markov/Chebyshev inequalities, LLN, CLT; order statistics (light). Stat 110 L23–29 (skim) · G&amp;K</td><td>PYQs: CLT/inequality questions</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w7"></td><td>7</td><td>Aug 29–Sep 4</td><td>Sampling distributions (χ², t, F), descriptive stats, z/t tests + CIs at DA level (ST depth comes in Block 4). G&amp;K</td><td>PYQs: hypothesis-testing basics</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w8"></td><td>8</td><td>Sep 5–11</td><td><span class="mock">SUBJECT MOCK: probability &amp; stats (mixed DA+ST) + 2-hr autopsy</span></td><td>Start 3B1B <em>Essence of Linear Algebra</em> (short videos fit weekday slots)</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </details>
+
+  <details class="blk">
+    <summary>Block 2 · Linear Algebra + Calculus &amp; Optimization (W9–W12, Sep 12 – Oct 9)</summary>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>✓</th><th>Wk</th><th>Dates</th><th>Weekend — theory</th><th>Weekdays — practice</th></tr></thead>
+      <tbody>
+        <tr><td class="ck"><input type="checkbox" data-k="w9"></td><td>9</td><td>Sep 12–18</td><td>Vector spaces, rank, linear systems Ax=b, inverse. Strang 18.06 L1–8 (selected) · GO Classes LA</td><td>CS/DA PYQs: rank, determinant, systems</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w10"></td><td>10</td><td>Sep 19–25</td><td>Determinants, eigenvalues/eigenvectors, diagonalization. Strang L16–22 · GO Classes</td><td>PYQs: eigenvalue questions (GATE's favorite)</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w11"></td><td>11</td><td>Sep 26–Oct 2</td><td>Projections, SVD, quadratic forms + calculus: limits, maxima/minima, Taylor series. 3B1B <em>Essence of Calculus</em></td><td>PYQs: SVD/projection + calculus · <span class="mock">ENROLL in paid DA test series by Sep 30</span></td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w12"></td><td>12</td><td>Oct 3–9</td><td>Optimization: gradients, convexity, gradient descent + <span class="mock">SUBJECT MOCK: LinAlg + Calculus + autopsy</span></td><td>ISLR Ch 2 reading (ML warm-up)</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </details>
+
+  <details class="blk">
+    <summary>Block 3 · Machine Learning + Regression (W13–W18, Oct 10 – Nov 20)</summary>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>✓</th><th>Wk</th><th>Dates</th><th>Weekend — theory</th><th>Weekdays — practice</th></tr></thead>
+      <tbody>
+        <tr><td class="ck"><input type="checkbox" data-k="w13"></td><td>13</td><td>Oct 10–16</td><td>Simple + multiple linear regression, least squares, bias–variance. ISLR Ch 3 · StatQuest</td><td>DA PYQs: regression; test-series topic test</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w14"></td><td>14</td><td>Oct 17–23</td><td>Classification: logistic regression, naive Bayes, k-NN, LDA. ISLR Ch 4 · StatQuest</td><td>PYQs: classification</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w15"></td><td>15</td><td>Oct 24–30</td><td>Cross-validation, bootstrap, ridge/lasso regularization. ISLR Ch 5–6</td><td>PYQs: model evaluation</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w16"></td><td>16</td><td>Oct 31–Nov 6</td><td>Sat: decision trees, bagging, random forest, boosting (ISLR Ch 8). <span class="mock">Sun Nov 1: FULL DA MOCK #1 — baseline</span></td><td>2-hr autopsy → error log born; patch worst gap</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w17"></td><td>17</td><td>Nov 7–13</td><td>SVM (ISLR Ch 9) + neural nets: perceptron, MLP, backprop, activations. NPTEL/StatQuest</td><td>PYQs: SVM + NN numericals</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w18"></td><td>18</td><td>Nov 14–20</td><td>k-means, hierarchical clustering, PCA (ISLR Ch 12) + <span class="mock">SUBJECT MOCK: ML + autopsy</span></td><td>Start G&amp;K estimation chapters (reading fits weekdays)</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </details>
+
+  <details class="blk">
+    <summary>Block 4 · ST core (W19–W21, Nov 21 – Dec 11)</summary>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>✓</th><th>Wk</th><th>Dates</th><th>Weekend — theory</th><th>Weekdays — practice</th></tr></thead>
+      <tbody>
+        <tr><td class="ck"><input type="checkbox" data-k="w19"></td><td>19</td><td>Nov 21–27</td><td>Estimation: method of moments, MLE, unbiasedness, consistency, sufficiency, Cramér–Rao bound. G&amp;K</td><td>ST PYQs: estimation</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w20"></td><td>20</td><td>Nov 28–Dec 4</td><td>Sat: Neyman–Pearson lemma, likelihood-ratio tests, confidence intervals (G&amp;K). <span class="mock">Sun Nov 29: FULL DA MOCK #2</span></td><td>Autopsy + ST PYQs: testing</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w21"></td><td>21</td><td>Dec 5–11</td><td>Sat: Markov chains + Poisson process, light pass (Ross <em>Prob. Models</em> Ch 4–5). <span class="mock">Sun Dec 6: FULL ST MOCK #1</span></td><td>Autopsy + ST PYQs: stochastic processes</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </details>
+
+  <details class="blk">
+    <summary>Block 5 · AI + CS strengths speed-pass (W22–W24, Dec 12 – Jan 1)</summary>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>✓</th><th>Wk</th><th>Dates</th><th>Weekend — theory</th><th>Weekdays — practice</th></tr></thead>
+      <tbody>
+        <tr><td class="ck"><input type="checkbox" data-k="w22"></td><td>22</td><td>Dec 12–18</td><td>Sat: AI search — uninformed/informed, A*, minimax, alpha-beta (R&amp;N Ch 3–5, Khemani). <span class="mock">Sun Dec 13: FULL DA MOCK #3</span></td><td>Autopsy + CS PYQs: DSA (arrays, trees, graphs, sorting, hashing)</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w23"></td><td>23</td><td>Dec 19–25</td><td>Sat: propositional + first-order logic, inference; Bayes-net basics, conditional independence (R&amp;N). <span class="mock">Sun Dec 20: FULL ST MOCK #2</span></td><td>Autopsy + CS PYQs: SQL, relational algebra, normalization, ER</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w24"></td><td>24</td><td>Dec 26–Jan 1</td><td>Sat: Python semantics + warehousing basics wrap; <span class="mock">SUBJECT MOCK: AI + CS</span>. <span class="mock">Sun Dec 27: FULL DA MOCK #4 · COVERAGE FREEZE</span></td><td>Autopsy; anything untouched is now PYQ-only</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </details>
+
+  <details class="blk">
+    <summary>Phase 2 · PYQ + weekly mocks (W25–W30, Jan 2 – exam)</summary>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>✓</th><th>Wk</th><th>Dates</th><th>Weekend</th><th>Weekdays</th></tr></thead>
+      <tbody>
+        <tr><td class="ck"><input type="checkbox" data-k="w25"></td><td>25</td><td>Jan 2–8</td><td>DA PYQs 2024–2026, fully timed, exam conditions. Formula sheet v1</td><td>Error-log drilling: worst 3 topics</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w26"></td><td>26</td><td>Jan 9–15</td><td><span class="mock">Sun Jan 10: FULL DA MOCK #5</span> + ST PYQs 2019–2022 (selected)</td><td>Autopsy + patch gaps</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w27"></td><td>27</td><td>Jan 16–22</td><td><span class="mock">Sun Jan 17: FULL DA MOCK #6</span> + CS-overlap PYQs. Formula sheet v2</td><td>Autopsy + timed GA sets</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w28"></td><td>28</td><td>Jan 23–29</td><td><span class="mock">Sun Jan 24: FULL ST MOCK #3</span> + error-log drilling</td><td>Speed drills on calculation-error topics</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w29"></td><td>29</td><td>Jan 30–Feb 5</td><td><span class="mock">Sun Jan 31: FULL DA MOCK #7 — dress rehearsal in the real exam time-slot</span></td><td>Light: formula sheets + error log only. No new material after Wed</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w30"></td><td>30</td><td>Exam week</td><td colspan="2">Expected first two weekends of Feb 2027. Sleep well, formula sheets only, admit card + logistics sorted early. Go get it.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </details>
+
+  <p class="muted">Mock totals: 7 full DA (Nov 1, Nov 29, Dec 13, Dec 27, Jan 10, Jan 17, Jan 31) · 3 full ST (Dec 6, Dec 20, Jan 24) · 5 subject mocks. If behind schedule, drop ST fulls first — never DA fulls.</p>
+  </div>
+</details>
+
+<details class="sec">
+  <summary><span class="num">7</span>Milestones <span class="pill">saved in this browser</span></summary>
+  <div class="body" id="milestones">
   <label class="check"><input type="checkbox" data-k="m1"><span><strong>Sep 6</strong> — Probability &amp; distributions done + subject mock taken</span></label>
   <label class="check"><input type="checkbox" data-k="m2"><span><strong>Sep 30</strong> — Enrolled in a paid DA test series (GO Classes / PW / Made Easy)</span></label>
   <label class="check"><input type="checkbox" data-k="m3"><span><strong>Oct 4</strong> — LinAlg + Calculus done + subject mock taken</span></label>
@@ -155,21 +417,25 @@
   <label class="check"><input type="checkbox" data-k="m8"><span><strong>Late Dec</strong> — DA mock ≥ 45</span></label>
   <label class="check"><input type="checkbox" data-k="m9"><span><strong>Mid Jan</strong> — DA mock ≥ 60</span></label>
   <label class="check"><input type="checkbox" data-k="m10"><span><strong>Registration (Aug–Sep)</strong> — Registered DA primary + ST secondary; re-verified 2027 two-paper table</span></label>
-</div>
+  </div>
+</details>
 
-<h2><span class="num">6</span>Mocks</h2>
-<div class="card">
+<details class="sec">
+  <summary><span class="num">8</span>Mocks — the rules</summary>
+  <div class="body">
   <ul>
     <li>Subject mock at the end of every block (test-series subject tests or PYQ-assembled).</li>
-    <li>Full DA mocks: baseline Nov 1 → fortnightly through Dec → weekly in Jan (~6–7 total).</li>
-    <li>Full ST mocks: first in early Dec, then 1 per 2 DA mocks (~3–4 total). <span class="rule">Drop ST fulls first if behind.</span></li>
+    <li>Full DA mocks: baseline Nov 1 → fortnightly through Dec → weekly in Jan (7 total).</li>
+    <li>Full ST mocks: Dec 6, Dec 20, Jan 24 (3 total). <span class="rule">Drop ST fulls first if behind.</span></li>
     <li>Paid DA test series by end of September (~₹1.5–3k). Add an ST series only if December ST mocks look competitive.</li>
     <li><strong>Every mock → 2-hour autopsy before the next:</strong> every lost mark tagged <em>concept / calculation / misread</em> in one running error log. January revision drills this log.</li>
   </ul>
-</div>
+  </div>
+</details>
 
-<h2><span class="num">7</span>Resources</h2>
-<div class="card">
+<details class="sec">
+  <summary><span class="num">9</span>Resources</summary>
+  <div class="body">
   <p><strong>Shared core (Prob/Stats, LinAlg, Calculus)</strong></p>
   <ul>
     <li><strong>Probability:</strong> Harvard Stat 110 (Joe Blitzstein, YouTube) for intuition → GO Classes DA probability playlist for GATE-style problems. Book: Sheldon Ross, <em>A First Course in Probability</em> (selected chapters).</li>
@@ -190,28 +456,23 @@
     <li><strong>ST PYQs 2019–2026</strong> — the single best resource for ST-only topics.</li>
   </ul>
   <p><strong>Question banks:</strong> official DA papers (2024–2026), ST papers (2019–2026), overlapping CS PYQ topics; GATE Overflow (free, has a DA section).</p>
-</div>
+  </div>
+</details>
 
-<h2><span class="num">8</span>Risks</h2>
-<div class="card">
+<details class="sec">
+  <summary><span class="num">10</span>Risks &amp; goals beyond the exam</summary>
+  <div class="body">
   <ul>
     <li><strong>Time budget is the #1 risk.</strong> 12–15 unpredictable hrs/week makes single-digit rank a long shot; the plan protects the score <em>floor</em> (top-200 + strong score) even in partial success.</li>
     <li><strong>ST dilution</strong> is capped by the 75/25 split and the sacrifice order.</li>
     <li><strong>GATE 2027 specifics</strong> (exact dates, organizing institute, syllabus tweaks, two-paper table) publish ~Aug–Sep 2026 — re-verify at registration.</li>
+    <li><strong>M.Tech DS/AI</strong> at IISc / top IITs via DA rank; <strong>NUS/NTU</strong> via GATE score targets the 2028 intake (applications late 2027; IELTS needed) — post-exam workstream.</li>
   </ul>
-</div>
-
-<h2><span class="num">9</span>Goal beyond the exam</h2>
-<div class="card">
-  <ul>
-    <li><strong>M.Tech DS/AI</strong> at IISc / top IITs via DA rank.</li>
-    <li><strong>NUS/NTU</strong> via GATE score → targets the <strong>2028 intake</strong> (applications late 2027; IELTS needed). Post-exam workstream.</li>
-    <li>Registration: <strong>DA primary + ST secondary</strong> — allowed per the official GATE two-paper combination table.</li>
-  </ul>
-</div>
+  </div>
+</details>
 
 <footer>
-  Plan drafted 15 July 2026 · Exam expected first two weekends of February 2027 · Milestone checkboxes are stored only in this browser (localStorage)
+  Plan drafted 15 July 2026 · Exam expected first two weekends of February 2027 · Ticks are stored only in this browser (localStorage)
 </footer>
 
 </div>
@@ -229,20 +490,78 @@
   tick();
   setInterval(tick, 3600000);
 
-  // Milestone persistence
+  // ---- Motivational quote (learning/knowledge) ----
+  // Primary: Quotable API (free, tag-filtered). Fallback 1: DummyJSON. Fallback 2: built-in offline list.
+  var LOCAL_QUOTES = [
+    { q: 'An investment in knowledge pays the best interest.', a: 'Benjamin Franklin' },
+    { q: 'Live as if you were to die tomorrow. Learn as if you were to live forever.', a: 'attributed to M. K. Gandhi' },
+    { q: 'The expert in anything was once a beginner.', a: 'Helen Hayes' },
+    { q: 'It always seems impossible until it is done.', a: 'Nelson Mandela' },
+    { q: 'Success is the sum of small efforts, repeated day in and day out.', a: 'Robert Collier' },
+    { q: 'The beautiful thing about learning is that no one can take it away from you.', a: 'B.B. King' },
+    { q: 'Genius is one percent inspiration and ninety-nine percent perspiration.', a: 'Thomas Edison' },
+    { q: 'I have not failed. I’ve just found ten thousand ways that won’t work.', a: 'Thomas Edison' },
+    { q: 'Knowledge is power.', a: 'Francis Bacon' },
+    { q: 'The man who moves a mountain begins by carrying away small stones.', a: 'Confucius' },
+    { q: 'It does not matter how slowly you go as long as you do not stop.', a: 'Confucius' },
+    { q: 'What we learn with pleasure we never forget.', a: 'Alfred Mercier' }
+  ];
+  var qEl = document.getElementById('quotebox');
+  function showQuote(text, author) {
+    qEl.firstChild.textContent = '“' + text + '”';
+    qEl.querySelector('.qa').textContent = author ? '— ' + author : '';
+  }
+  function localQuote() {
+    var q = LOCAL_QUOTES[Math.floor(Math.random() * LOCAL_QUOTES.length)];
+    showQuote(q.q, q.a);
+  }
+  function loadQuote() {
+    fetch('https://api.quotable.io/quotes/random?tags=education|wisdom|knowledge&maxLength=160', { signal: AbortSignal.timeout(4000) })
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (d) {
+        var q = Array.isArray(d) ? d[0] : d;
+        if (q && q.content) showQuote(q.content, q.author); else throw 0;
+      })
+      .catch(function () {
+        fetch('https://dummyjson.com/quotes/random', { signal: AbortSignal.timeout(4000) })
+          .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+          .then(function (d) {
+            if (d && d.quote) showQuote(d.quote, d.author); else throw 0;
+          })
+          .catch(localQuote);
+      });
+  }
+  loadQuote();
+  document.getElementById('newquote').addEventListener('click', loadQuote);
+
+  // ---- Persistence: milestones + weekly ticks (localStorage) ----
   var KEY = 'gate27-milestones';
   var saved = {};
   try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
-  document.querySelectorAll('#milestones input[type=checkbox]').forEach(function (cb) {
+
+  var weekBoxes = [];
+  document.querySelectorAll('input[type=checkbox][data-k]').forEach(function (cb) {
     var k = cb.dataset.k;
+    var isWeek = k.charAt(0) === 'w';
+    if (isWeek) weekBoxes.push(cb);
+    var host = isWeek ? cb.closest('tr') : cb.parentElement;
+    function paint() { host.classList.toggle('done', cb.checked); }
     cb.checked = !!saved[k];
-    cb.parentElement.classList.toggle('done', cb.checked);
+    paint();
     cb.addEventListener('change', function () {
       saved[k] = cb.checked;
       localStorage.setItem(KEY, JSON.stringify(saved));
-      cb.parentElement.classList.toggle('done', cb.checked);
+      paint();
+      updateBar();
     });
   });
+
+  var bar = document.querySelector('#progressbar > div');
+  function updateBar() {
+    var done = weekBoxes.filter(function (b) { return b.checked; }).length;
+    bar.style.width = Math.round(100 * done / weekBoxes.length) + '%';
+  }
+  updateBar();
 })();
 </script>
 </body>
