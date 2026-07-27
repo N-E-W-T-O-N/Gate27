@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GATE 2025 vs 2026 — Cut-off & Participation Analysis</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0d1117; --panel:#161b22; --panel2:#1c2230; --line:#2a3242;
+  --txt:#e6edf3; --mut:#9aa7b8; --acc:#4f9cff; --acc2:#34d399;
+  --y25:#f59e0b; --y26:#4f9cff; --gen:#4f9cff; --obc:#a78bfa; --sc:#34d399;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--txt);line-height:1.5;padding:24px;max-width:1280px;margin:0 auto}
+header h1{font-size:24px;font-weight:700}
+header p{color:var(--mut);font-size:14px;margin-top:4px}
+.tag{display:inline-block;background:var(--panel2);color:var(--mut);font-size:11px;
+  padding:3px 8px;border-radius:20px;margin-right:6px;margin-top:8px;border:1px solid var(--line)}
+section{margin-top:28px}
+h2{font-size:17px;margin-bottom:4px;font-weight:650}
+.sub{color:var(--mut);font-size:13px;margin-bottom:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.kpi .label{color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.kpi .val{font-size:26px;font-weight:700;margin-top:6px}
+.kpi .delta{font-size:12px;margin-top:4px}
+.up{color:#34d399}.down{color:#f87171}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+.chart-wrap{position:relative;height:420px}
+.chart-wrap.tall{height:760px}
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+button.ctrl{background:var(--panel2);color:var(--txt);border:1px solid var(--line);
+  padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px}
+button.ctrl.active{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+select,input[type=text]{background:var(--panel2);color:var(--txt);border:1px solid var(--line);
+  padding:7px 10px;border-radius:8px;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:nth-child(1),th:nth-child(2),td:nth-child(1),td:nth-child(2){text-align:left}
+th{color:var(--mut);font-weight:600;cursor:pointer;user-select:none;position:sticky;top:0;background:var(--panel)}
+th:hover{color:var(--txt)}
+tbody tr:hover{background:var(--panel2)}
+.tbl-scroll{max-height:560px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+.note{background:var(--panel2);border-left:3px solid var(--acc);padding:12px 16px;border-radius:6px;
+  font-size:13px;color:var(--mut)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--mut);margin-bottom:10px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle}
+footer{margin-top:36px;color:var(--mut);font-size:12px;border-top:1px solid var(--line);padding-top:14px}
+a{color:var(--acc)}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.pill{font-size:11px;padding:2px 7px;border-radius:20px}
+</style>
+</head>
+<body>
+<header>
+  <h1>GATE 2025 vs 2026 — Cut-off & Participation Analysis</h1>
+  <p>Registration vs appearance, category-wise cut-offs and their distribution across all 35 papers.</p>
+  <div>
+    <span class="tag">35 papers</span>
+    <span class="tag">2 exam cycles</span>
+    <span class="tag">Source: official GATE cut-off pages + statistical reports</span>
+  </div>
+</header>
+
+<!-- KPIs -->
+<section>
+  <h2>Headline numbers</h2>
+  <div class="sub">Totals across all papers. Δ = change from GATE 2025 to GATE 2026.</div>
+  <div class="kpis" id="kpis"></div>
+</section>
+
+<!-- Registered vs Appeared -->
+<section>
+  <h2>Registered vs Appeared, by paper</h2>
+  <div class="sub">How many candidates registered and how many actually sat the exam.</div>
+  <div class="panel">
+    <div class="controls">
+      <button class="ctrl active" data-year="y2026" id="ra26">GATE 2026</button>
+      <button class="ctrl" data-year="y2025" id="ra25">GATE 2025</button>
+      <span style="color:var(--mut);font-size:12px;margin-left:auto">Sorted by registrations (desc)</span>
+    </div>
+    <div class="chart-wrap tall"><canvas id="raChart"></canvas></div>
+  </div>
+</section>
+
+<!-- Appearance rate -->
+<section>
+  <h2>Appearance rate (appeared ÷ registered)</h2>
+  <div class="sub">Share of registered candidates who showed up. Lower bars = more no-shows.</div>
+  <div class="panel">
+    <div class="legend">
+      <span><span class="dot" style="background:var(--y25)"></span>2025</span>
+      <span><span class="dot" style="background:var(--y26)"></span>2026</span>
+    </div>
+    <div class="chart-wrap tall"><canvas id="rateChart"></canvas></div>
+  </div>
+</section>
+
+<!-- Cut-off by category -->
+<section>
+  <h2>Cut-off (qualifying marks) by category</h2>
+  <div class="sub">GEN, OBC-NCL/EWS and SC/ST/PwD qualifying marks per paper (out of 100).</div>
+  <div class="panel">
+    <div class="controls">
+      <button class="ctrl active" data-cyear="y2026" id="cut26">GATE 2026</button>
+      <button class="ctrl" data-cyear="y2025" id="cut25">GATE 2025</button>
+    </div>
+    <div class="chart-wrap tall"><canvas id="cutChart"></canvas></div>
+  </div>
+</section>
+
+<!-- Distribution -->
+<section>
+  <h2>Cut-off distribution</h2>
+  <div class="sub">How GEN cut-offs cluster. Many papers sit at the 25.0 floor; a band of tougher papers sit at 40.0.</div>
+  <div class="grid2">
+    <div class="panel">
+      <div class="sub" style="margin:0 0 8px">GEN cut-off histogram</div>
+      <div class="chart-wrap"><canvas id="histChart"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="sub" style="margin:0 0 8px">Category cut-off spread (avg across papers)</div>
+      <div class="chart-wrap"><canvas id="spreadChart"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- YoY cut-off change -->
+<section>
+  <h2>Year-over-year GEN cut-off change</h2>
+  <div class="sub">Green = cut-off rose in 2026 (paper got tougher to qualify); red = cut-off fell.</div>
+  <div class="panel"><div class="chart-wrap tall"><canvas id="yoyChart"></canvas></div></div>
+</section>
+
+<!-- Ranking -->
+<section>
+  <h2>Ranking by category</h2>
+  <div class="note" id="rankNote"></div>
+</section>
+
+<!-- Data table -->
+<section>
+  <h2>Full data table</h2>
+  <div class="sub">Click any column header to sort. Type to filter by paper.</div>
+  <div class="controls">
+    <input type="text" id="search" placeholder="Filter paper… (e.g. Computer, CS, Civil)">
+    <select id="yearSel">
+      <option value="y2026">Show GATE 2026</option>
+      <option value="y2025">Show GATE 2025</option>
+    </select>
+  </div>
+  <div class="tbl-scroll"><table id="tbl"><thead></thead><tbody></tbody></table></div>
+</section>
+
+<footer id="foot"></footer>
+
+<script>
+const RAW = [
+["AE","Aerospace Engineering",8444,6591,25,22.5,16.6, 7576,6009,28.9,26,19.2],
+["AG","Agricultural Engineering",2985,2545,25,22.5,16.6, 3095,2624,25,22.5,16.6],
+["AR","Architecture and Planning",10673,8415,40,36,26.6, 10898,8501,40,36,26.6],
+["BM","Biomedical Engineering",3756,3041,25,22.5,16.6, 2682,2165,29.2,26.2,19.4],
+["BT","Biotechnology",26808,21513,25.8,23.2,17.2, 24927,20048,28,25.2,18.6],
+["CE","Civil Engineering",97486,76385,28.7,25.8,19.1, 101596,79951,29.2,26.2,19.4],
+["CH","Chemical Engineering",17416,14077,25,22.5,16.6, 18009,14843,27.7,24.9,18.4],
+["CS","Computer Science & IT",259922,211020,30,27,20, 207851,170825,29.2,26.2,19.4],
+["CY","Chemistry",30775,22457,25,22.5,16.6, 33058,25698,25,22.5,16.6],
+["DA","Data Science & AI",91764,69242,26.4,23.7,17.5, 75854,57054,29,26.1,19.3],
+["EC","Electronics & Comm.",115448,95752,26.4,23.7,17.5, 97394,81475,25,22.5,16.6],
+["EE","Electrical Engineering",81947,65801,27.7,24.9,18.4, 83355,67701,25,22.5,16.6],
+["ES","Environmental Sci. & Eng.",7341,5107,30,27,20, 9073,6631,26.1,23.4,17.4],
+["EY","Ecology and Evolution",3659,2601,40,36,26.6, 3509,2713,39.5,35.5,26.3],
+["GE","Geomatics Engineering",3582,2592,25,22.5,16.6, 3616,2726,25.7,23.1,17.1],
+["GG-1","Geology & Geophysics (Geol.)",5647,4336,39.3,35.3,26.1, 6837,5352,38.4,34.5,25.5],
+["GG-2","Geology & Geophysics (Geoph.)",668,519,37.1,33.3,24.7, 917,684,40,36,26.6],
+["IN","Instrumentation Eng.",15608,12424,39.8,35.8,26.5, 14680,11935,25.6,23,17],
+["MA","Mathematics",16272,11561,34.7,31.2,23.1, 16953,13171,25,22.5,16.6],
+["ME","Mechanical Engineering",76823,59612,25.2,22.6,16.7, 79830,62015,35.8,32.2,23.8],
+["MN","Mining Engineering",8415,6732,29.5,26.5,19.6, 8881,7438,30.6,27.5,20.4],
+["MT","Metallurgical Engineering",4794,3908,40,36,26.6, 4420,3571,40,36,26.6],
+["NM","Naval Arch. & Marine Eng.",548,419,33.7,30.3,22.4, 538,395,25.1,22.5,16.7],
+["PE","Petroleum Engineering",1428,1137,40,36,26.6, 1731,1320,31.1,27.9,20.7],
+["PH","Physics",24225,18055,25.5,22.9,17, 24747,19225,26.8,24.1,17.8],
+["PI","Production & Industrial Eng.",4849,3673,36,32.4,24, 4791,3547,35.6,32,23.7],
+["ST","Statistics",3333,2087,30.4,27.3,20.2, 3063,1967,30.2,27.1,20.1],
+["TF","Textile Eng. & Fibre Sci.",1549,1183,31.5,28.3,21, 2355,1889,34.7,31.2,23.1],
+["XE","Engineering Sciences",12622,9099,35.2,31.6,23.4, 14937,11156,35.4,31.8,23.5],
+["XH-C1","HSS (Economics)",4166,2952,35.7,32.1,23.8, 4161,2973,40,36,26.6],
+["XH-C2","HSS (English)",5350,3711,40,36,26.6, 5665,4132,40,36,26.6],
+["XH-C3","HSS (Linguistics)",383,285,37.4,33.6,24.9, 378,297,40,36,26.6],
+["XH-C4","HSS (Philosophy)",800,570,38.3,34.4,25.5, 702,531,40,36,26.6],
+["XH-C5","HSS (Psychology)",8858,6178,39.3,35.3,26.1, 5709,4125,40,36,26.6],
+["XH-C6","HSS (Sociology)",2643,1819,40,36,26.6, 2147,1546,40,36,26.6],
+["XL","Life Sciences",50732,40035,36.3,32.6,24.1, 50084,41086,31.3,28.1,20.8],
+];
+
+const D = RAW.map(r=>{
+  const [code,name,r26,a26,g26,o26,s26,r25,a25,g25,o25,s25]=r;
+  return {code,name,
+    y2026:{reg:r26,app:a26,gen:g26,obc:o26,sc:s26,rate:+(a26/r26*100).toFixed(1),absent:r26-a26},
+    y2025:{reg:r25,app:a25,gen:g25,obc:o25,sc:s25,rate:+(a25/r25*100).toFixed(1),absent:r25-a25},
+    d_reg:r26-r25, d_reg_pct:+((r26-r25)/r25*100).toFixed(1),
+    d_gen:+(g26-g25).toFixed(1)};
+});
+
+const sum=(arr,f)=>arr.reduce((a,b)=>a+f(b),0);
+const T={
+  r26:sum(D,d=>d.y2026.reg), a26:sum(D,d=>d.y2026.app),
+  r25:sum(D,d=>d.y2025.reg), a25:sum(D,d=>d.y2025.app)
+};
+T.rate26=+(T.a26/T.r26*100).toFixed(1);
+T.rate25=+(T.a25/T.r25*100).toFixed(1);
+const fmt=n=>n.toLocaleString('en-IN');
+const pct=n=>(n>0?'+':'')+n+'%';
+
+// KPIs
+const kpiData=[
+ {label:"Registered 2026",val:fmt(T.r26),d:T.r26-T.r25,base:T.r25},
+ {label:"Appeared 2026",val:fmt(T.a26),d:T.a26-T.a25,base:T.a25},
+ {label:"Appearance rate 2026",val:T.rate26+"%",draw:(T.rate26-T.rate25).toFixed(1)+" pts vs 2025"},
+ {label:"Registered 2025",val:fmt(T.r25),plain:fmt(T.a25)+" appeared ("+T.rate25+"%)"},
+ {label:"No-shows 2026",val:fmt(T.r26-T.a26),plain:((1-T.a26/T.r26)*100).toFixed(1)+"% of registrations"},
+];
+document.getElementById('kpis').innerHTML=kpiData.map(k=>{
+  let sub='';
+  if(k.base!==undefined){const p=((k.d/k.base)*100).toFixed(1);
+    sub=`<div class="delta ${k.d>=0?'up':'down'}">${k.d>=0?'▲':'▼'} ${fmt(Math.abs(k.d))} (${pct(+p)})</div>`;}
+  else if(k.draw){const up=parseFloat(k.draw)>=0;sub=`<div class="delta ${up?'up':'down'}">${up?'▲':'▼'} ${k.draw}</div>`;}
+  else if(k.plain){sub=`<div class="delta" style="color:var(--mut)">${k.plain}</div>`;}
+  return `<div class="kpi"><div class="label">${k.label}</div><div class="val">${k.val}</div>${sub}</div>`;
+}).join('');
+
+Chart.defaults.color='#9aa7b8';
+Chart.defaults.font.size=11;
+Chart.defaults.borderColor='#2a3242';
+
+// Registered vs Appeared
+const sortedReg=[...D].sort((a,b)=>b.y2026.reg-a.y2026.reg);
+let raChart;
+function drawRA(year){
+  const s=[...D].sort((a,b)=>b[year].reg-a[year].reg);
+  const labels=s.map(d=>d.code);
+  if(raChart)raChart.destroy();
+  raChart=new Chart(document.getElementById('raChart'),{
+    type:'bar',
+    data:{labels,datasets:[
+      {label:'Registered',data:s.map(d=>d[year].reg),backgroundColor:'#2d4a7c'},
+      {label:'Appeared',data:s.map(d=>d[year].app),backgroundColor:'#4f9cff'}
+    ]},
+    options:{indexAxis:'y',maintainAspectRatio:false,
+      plugins:{tooltip:{callbacks:{afterLabel:ctx=>{const d=s[ctx.dataIndex];return 'Rate: '+d[year].rate+'%';}},
+        title:{display:true}},
+        legend:{position:'top'}},
+      scales:{x:{ticks:{callback:v=>v>=1000?(v/1000)+'k':v}},y:{ticks:{autoSkip:false}}}}
+  });
+}
+drawRA('y2026');
+ra26.onclick=()=>{ra26.classList.add('active');ra25.classList.remove('active');drawRA('y2026');};
+ra25.onclick=()=>{ra25.classList.add('active');ra26.classList.remove('active');drawRA('y2025');};
+
+// Appearance rate
+const sRate=[...D].sort((a,b)=>a.y2026.rate-b.y2026.rate);
+new Chart(document.getElementById('rateChart'),{
+  type:'bar',
+  data:{labels:sRate.map(d=>d.code),datasets:[
+    {label:'2025',data:sRate.map(d=>d.y2025.rate),backgroundColor:'#f59e0b'},
+    {label:'2026',data:sRate.map(d=>d.y2026.rate),backgroundColor:'#4f9cff'}
+  ]},
+  options:{indexAxis:'y',maintainAspectRatio:false,
+    plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.raw+'%'}}},
+    scales:{x:{min:60,max:90,title:{display:true,text:'% appeared'}},y:{ticks:{autoSkip:false}}}}
+});
+
+// Cut-off by category
+let cutChart;
+function drawCut(year){
+  const s=[...D].sort((a,b)=>b[year].gen-a[year].gen);
+  if(cutChart)cutChart.destroy();
+  cutChart=new Chart(document.getElementById('cutChart'),{
+    type:'bar',
+    data:{labels:s.map(d=>d.code),datasets:[
+      {label:'GEN',data:s.map(d=>d[year].gen),backgroundColor:'#4f9cff'},
+      {label:'OBC-NCL/EWS',data:s.map(d=>d[year].obc),backgroundColor:'#a78bfa'},
+      {label:'SC/ST/PwD',data:s.map(d=>d[year].sc),backgroundColor:'#34d399'}
+    ]},
+    options:{indexAxis:'y',maintainAspectRatio:false,
+      plugins:{legend:{position:'top'},tooltip:{callbacks:{afterTitle:items=>s[items[0].dataIndex].name}}},
+      scales:{x:{max:42,title:{display:true,text:'Qualifying marks (/100)'}},y:{ticks:{autoSkip:false}}}}
+  });
+}
+drawCut('y2026');
+cut26.onclick=()=>{cut26.classList.add('active');cut25.classList.remove('active');drawCut('y2026');};
+cut25.onclick=()=>{cut25.classList.add('active');cut26.classList.remove('active');drawCut('y2025');};
+
+// Histogram of GEN cutoffs 2026
+const bins=[[25,27],[27,29],[29,31],[31,33],[33,35],[35,37],[37,39],[39,40.01]];
+const binLabels=["25–27","27–29","29–31","31–33","33–35","35–37","37–39","39–40"];
+const hist=bins.map(([lo,hi])=>D.filter(d=>d.y2026.gen>=lo&&d.y2026.gen<hi).length);
+new Chart(document.getElementById('histChart'),{
+  type:'bar',
+  data:{labels:binLabels,datasets:[{label:'# papers (2026 GEN)',data:hist,backgroundColor:'#4f9cff'}]},
+  options:{maintainAspectRatio:false,plugins:{legend:{display:false}},
+    scales:{y:{title:{display:true,text:'# of papers'},ticks:{stepSize:1}},
+      x:{title:{display:true,text:'GEN cut-off band'}}}}
+});
+
+// Spread: avg category cutoff per year
+const avg=(year,k)=>+(sum(D,d=>d[year][k])/D.length).toFixed(1);
+new Chart(document.getElementById('spreadChart'),{
+  type:'bar',
+  data:{labels:['GEN','OBC-NCL/EWS','SC/ST/PwD'],datasets:[
+    {label:'2025',data:[avg('y2025','gen'),avg('y2025','obc'),avg('y2025','sc')],backgroundColor:'#f59e0b'},
+    {label:'2026',data:[avg('y2026','gen'),avg('y2026','obc'),avg('y2026','sc')],backgroundColor:'#4f9cff'}
+  ]},
+  options:{maintainAspectRatio:false,plugins:{legend:{position:'top'},
+    tooltip:{callbacks:{label:c=>c.dataset.label+' avg: '+c.raw}}},
+    scales:{y:{title:{display:true,text:'avg qualifying mark'}}}}
+});
+
+// YoY GEN cutoff change
+const sYoY=[...D].sort((a,b)=>b.d_gen-a.d_gen);
+new Chart(document.getElementById('yoyChart'),{
+  type:'bar',
+  data:{labels:sYoY.map(d=>d.code),datasets:[{label:'Δ GEN cut-off (2026 − 2025)',
+    data:sYoY.map(d=>d.d_gen),
+    backgroundColor:sYoY.map(d=>d.d_gen>=0?'#34d399':'#f87171')}]},
+  options:{indexAxis:'y',maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{afterTitle:i=>sYoY[i[0].dataIndex].name,
+      label:c=>(c.raw>0?'+':'')+c.raw+' marks'}}},
+    scales:{x:{title:{display:true,text:'change in GEN qualifying marks'}},y:{ticks:{autoSkip:false}}}}
+});
+
+// Ranking note
+document.getElementById('rankNote').innerHTML=
+ `GATE publishes <b>category-wise qualifying cut-offs</b> (shown above) and <b>All India Rank (AIR)</b> on each `+
+ `candidate's scorecard, but it does <b>not release a public paper-wise rank list broken down by category</b> — `+
+ `so a full category-wise ranking table cannot be sourced from official data. What is known: rank is derived from the `+
+ `normalised GATE score, not raw marks, and reservation only sets the qualifying floor — AIR itself is computed on a `+
+ `common merit basis. As a practical reference point, in the largest paper (CS, ~211k appeared in 2026) a GEN qualifying `+
+ `score near the cut-off corresponds to a rank deep in the tens of thousands, while AIR&nbsp;1–100 typically requires `+
+ `scores above ~85/100. Official AIR-1 toppers are listed on the GATE site's "All India Rank 1 Candidates" page. `+
+ `If you want, I can add an estimated marks-vs-rank curve for a specific paper using published score-rank data.`;
+
+// Table
+const cols=[
+ {k:'code',t:'Code'},{k:'name',t:'Paper'},
+ {k:'reg',t:'Registered',y:1},{k:'app',t:'Appeared',y:1},{k:'rate',t:'Appear %',y:1,suf:'%'},
+ {k:'gen',t:'GEN',y:1},{k:'obc',t:'OBC/EWS',y:1},{k:'sc',t:'SC/ST/PwD',y:1},
+ {k:'d_reg_pct',t:'Δ Reg % (YoY)',suf:'%'},{k:'d_gen',t:'Δ GEN (YoY)'}
+];
+let curYear='y2026',sortK='reg',sortDir=-1;
+const thead=document.querySelector('#tbl thead');
+const tbody=document.querySelector('#tbl tbody');
+function val(d,c){ if(c.y)return d[curYear][c.k]; return d[c.k]; }
+function render(){
+  thead.innerHTML='<tr>'+cols.map(c=>`<th data-k="${c.k}">${c.t}${sortK===c.k?(sortDir<0?' ▼':' ▲'):''}</th>`).join('')+'</tr>';
+  const q=document.getElementById('search').value.toLowerCase();
+  let rows=D.filter(d=>d.code.toLowerCase().includes(q)||d.name.toLowerCase().includes(q));
+  rows.sort((a,b)=>{
+    const ca=cols.find(c=>c.k===sortK);
+    let x=val(a,ca),y=val(b,ca);
+    if(typeof x==='string')return sortDir*x.localeCompare(y);
+    return sortDir*(x-y);
+  });
+  tbody.innerHTML=rows.map(d=>'<tr>'+cols.map(c=>{
+    let v=val(d,c);
+    if(typeof v==='number'){
+      if(c.k==='d_reg_pct'||c.k==='d_gen'){
+        const col=v>0?'#34d399':(v<0?'#f87171':'#9aa7b8');
+        v=`<span style="color:${col}">${v>0?'+':''}${v}${c.suf||''}</span>`;
+      } else { v=fmt(v)+(c.suf||''); }
+    }
+    return `<td>${v}</td>`;
+  }).join('')+'</tr>').join('');
+  thead.querySelectorAll('th').forEach(th=>th.onclick=()=>{
+    const k=th.dataset.k;
+    if(sortK===k)sortDir*=-1; else {sortK=k;sortDir=-1;}
+    render();
+  });
+}
+document.getElementById('search').oninput=render;
+document.getElementById('yearSel').onchange=e=>{curYear=e.target.value;render();};
+render();
+
+document.getElementById('foot').innerHTML=
+ `Data: GATE 2026 cut-off & registration — official IIT Guwahati cut-off page (gate2026.iitg.ac.in). `+
+ `GATE 2025 registration/appearance and category cut-offs — official GATE 2025 statistical report (IIT Roorkee), `+
+ `as reproduced by Careers360. All derived metrics (appearance rate, YoY deltas, averages, distribution) computed in-browser. `+
+ `Figures are official qualifying marks out of 100. Prepared June 2026.`;
+</script>
+</body>
+</html>

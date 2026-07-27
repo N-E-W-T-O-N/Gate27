@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GATE 2024 — Category Distribution by Paper</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--panel2:#1c2230;--line:#2a3242;--txt:#e6edf3;--mut:#9aa7b8;--acc:#4f9cff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--txt);line-height:1.5;padding:24px;max-width:1280px;margin:0 auto}
+header h1{font-size:24px;font-weight:700}
+header p{color:var(--mut);font-size:14px;margin-top:4px}
+.tag{display:inline-block;background:var(--panel2);color:var(--mut);font-size:11px;padding:3px 8px;
+  border-radius:20px;margin-right:6px;margin-top:8px;border:1px solid var(--line)}
+section{margin-top:28px}
+h2{font-size:17px;margin-bottom:4px;font-weight:650}
+.sub{color:var(--mut);font-size:13px;margin-bottom:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+.kpi .label{color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+.kpi .val{font-size:22px;font-weight:700;margin-top:4px}
+.kpi .d{font-size:11px;color:var(--mut);margin-top:3px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+.chart-wrap{position:relative;height:440px}
+.chart-wrap.tall{height:880px}
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+button.ctrl{background:var(--panel2);color:var(--txt);border:1px solid var(--line);padding:7px 14px;
+  border-radius:8px;cursor:pointer;font-size:13px}
+button.ctrl.active{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+select,input[type=text]{background:var(--panel2);color:var(--txt);border:1px solid var(--line);
+  padding:7px 10px;border-radius:8px;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
+th,td{padding:7px 9px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--mut);font-weight:600;cursor:pointer;user-select:none;position:sticky;top:0;background:var(--panel)}
+th:hover{color:var(--txt)}
+tbody tr:hover{background:var(--panel2)}
+.tbl-scroll{max-height:560px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+.note{background:var(--panel2);border-left:3px solid var(--acc);padding:12px 16px;border-radius:6px;font-size:13px;color:var(--mut)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+footer{margin-top:36px;color:var(--mut);font-size:12px;border-top:1px solid var(--line);padding-top:14px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>GATE 2024 — Category Distribution by Paper</h1>
+  <p>For each paper, how candidates split across categories — Registered, Appeared and Qualified — for GEN, EWS, OBC-NCL, SC and ST.</p>
+  <div>
+    <span class="tag">35 papers</span>
+    <span class="tag">5 categories</span>
+    <span class="tag">Source: official GATE 2024 Statistical & Performance Report (IISc)</span>
+  </div>
+</header>
+
+<section>
+  <h2>Overall category split</h2>
+  <div class="sub">Totals across all papers. Qualified % = qualified ÷ appeared.</div>
+  <div class="kpis" id="kpis"></div>
+</section>
+
+<section>
+  <h2>One paper at a time</h2>
+  <div class="sub">Pick a paper to see its category breakdown. Toggle which stage to view.</div>
+  <div class="panel">
+    <div class="controls">
+      <select id="paperSel"></select>
+      <button class="ctrl active" data-stage="reg" id="sReg">Registered</button>
+      <button class="ctrl" data-stage="app" id="sApp">Appeared</button>
+      <button class="ctrl" data-stage="qua" id="sQua">Qualified</button>
+    </div>
+    <div class="grid2">
+      <div><div class="sub" style="margin:0 0 8px">Counts by category</div>
+        <div class="chart-wrap" style="height:340px"><canvas id="paperBar"></canvas></div></div>
+      <div><div class="sub" style="margin:0 0 8px">Share of total (%)</div>
+        <div class="chart-wrap" style="height:340px"><canvas id="paperPie"></canvas></div></div>
+    </div>
+    <div id="paperStats" class="sub" style="margin-top:12px"></div>
+  </div>
+</section>
+
+<section>
+  <h2>Category composition of registrations, all papers</h2>
+  <div class="sub">Each bar = 100% of a paper's registrations, split by category. Shows which papers skew toward reserved categories.</div>
+  <div class="panel">
+    <div class="controls">
+      <button class="ctrl active" data-mode="pct" id="mPct">Share (%)</button>
+      <button class="ctrl" data-mode="abs" id="mAbs">Absolute counts</button>
+    </div>
+    <div class="chart-wrap tall"><canvas id="stackChart"></canvas></div>
+  </div>
+</section>
+
+<section>
+  <h2>Qualification rate by category</h2>
+  <div class="sub">Qualified ÷ Appeared, per category, averaged across all papers — and the appearance rate alongside.</div>
+  <div class="panel"><div class="chart-wrap" style="height:360px"><canvas id="qualChart"></canvas></div></div>
+</section>
+
+<section>
+  <h2>Full data table</h2>
+  <div class="sub">Click a header to sort; type to filter. Columns: Registered / Appeared / Qualified per category.</div>
+  <div class="controls">
+    <input type="text" id="search" placeholder="Filter paper…">
+    <select id="catSel">
+      <option value="all">All categories (totals)</option>
+      <option value="gen">GEN</option><option value="ews">GEN-EWS</option>
+      <option value="obc">OBC-NCL</option><option value="sc">SC</option><option value="st">ST</option>
+    </select>
+  </div>
+  <div class="tbl-scroll"><table id="tbl"><thead></thead><tbody></tbody></table></div>
+</section>
+
+<section>
+  <h2>About the 2025 report</h2>
+  <div class="note" id="note2025"></div>
+</section>
+
+<footer id="foot"></footer>
+
+<script>
+// code,name, GEN[r,a,q], EWS[r,a,q], OBC-NCL[r,a,q], SC[r,a,q], ST[r,a,q]
+const RAW=[
+["AE","Aerospace Engineering",2856,2091,393,307,258,76,2533,2018,372,1010,729,133,225,159,36],
+["AG","Agricultural Engineering",700,571,95,258,237,75,1040,908,155,489,412,72,290,234,20],
+["AR","Architecture and Planning",5645,4390,881,465,388,107,3798,3111,644,1191,922,335,351,269,82],
+["BM","Biomedical Engineering",1052,820,60,74,61,3,872,727,46,284,205,15,63,47,0],
+["BT","Biotechnology",10831,8541,1934,1328,1121,281,6157,5178,1004,2320,1805,565,574,433,110],
+["CE","Civil Engineering",29424,22242,3904,7820,6487,1598,40892,33610,6382,19695,15514,3305,10305,8016,1415],
+["CH","Chemical Engineering",5910,4741,644,1582,1371,240,6170,5219,669,2437,1941,295,831,665,85],
+["CS","Computer Science & IT",66040,51263,9823,13571,11698,2404,49027,41538,6331,18677,15170,2719,5337,4298,672],
+["CY","Chemistry",14053,10309,1999,3413,2714,692,12718,9961,1871,3891,2901,709,1307,940,157],
+["DA","Data Science & AI",25257,17763,3912,4729,3915,974,15053,11993,2260,5933,4405,1012,1521,1134,219],
+["EC","Electronics & Comm.",29120,22515,4240,6735,5859,1274,28166,23573,4378,10915,8623,2658,3221,2522,710],
+["EE","Electrical Engineering",21292,16517,2912,5009,4272,1031,27993,23302,4522,13866,11052,3046,5568,4456,1085],
+["ES","Environmental Sci. & Eng.",2902,1977,410,650,516,135,2986,2311,552,1617,1158,318,692,483,99],
+["EY","Ecology and Evolution",1604,1111,251,271,201,33,894,659,113,388,272,63,179,116,27],
+["GE","Geomatics Engineering",1370,1007,220,182,150,33,1037,840,188,471,366,100,178,128,28],
+["GG-1","Geology & Geophysics (Geol.)",2475,1871,391,584,484,173,2511,2029,504,1019,765,237,565,425,72],
+["GG-2","Geology & Geophysics (Geoph.)",259,187,45,132,119,43,377,309,95,170,129,54,99,78,15],
+["IN","Instrumentation Eng.",4435,3412,663,1054,887,220,4518,3724,745,1829,1412,291,615,465,59],
+["MA","Mathematics",6755,4884,805,2077,1662,331,6265,4980,767,1873,1408,392,647,491,102],
+["ME","Mechanical Engineering",27445,20969,3126,5831,4857,1055,30777,25172,4379,14068,10662,2586,4993,3886,776],
+["MN","Mining Engineering",1899,1522,279,615,523,146,3572,2983,538,1544,1287,273,885,731,108],
+["MT","Metallurgical Engineering",1180,915,220,256,221,67,1373,1131,277,688,550,125,361,294,34],
+["NM","Naval Arch. & Marine Eng.",174,117,17,25,19,8,202,148,36,94,61,7,22,16,2],
+["PE","Petroleum Engineering",801,624,101,197,169,59,700,613,141,346,284,67,102,80,18],
+["PH","Physics",11520,8559,1661,2555,2052,546,8916,7076,1503,2658,1970,580,826,601,141],
+["PI","Production & Industrial Eng.",1615,1180,239,349,287,57,1617,1262,272,989,736,142,345,260,38],
+["ST","Statistics",1283,755,161,267,191,47,756,532,98,271,162,28,86,54,5],
+["TF","Textile Eng. & Fibre Sci.",598,469,77,141,114,32,693,587,124,282,215,42,51,37,3],
+["XE","Engineering Sciences",5478,3953,819,1333,1086,253,5396,4249,935,2101,1511,307,633,462,65],
+["XH-C1","HSS (Economics)",2088,1514,340,320,241,43,890,666,91,337,231,61,113,69,13],
+["XH-C2","HSS (English)",2956,2070,494,415,314,61,1324,994,162,610,412,135,183,110,28],
+["XH-C3","HSS (Linguistics)",209,151,35,28,23,1,85,68,10,28,25,9,18,10,4],
+["XH-C4","HSS (Philosophy)",243,156,37,67,52,9,106,68,10,75,49,23,22,15,5],
+["XH-C5","HSS (Psychology)",2831,1972,418,312,219,59,1201,888,204,415,265,102,113,71,26],
+["XH-C6","HSS (Sociology)",708,431,110,155,104,28,413,290,58,208,141,56,82,54,14],
+["XL","Life Sciences",19945,15519,3529,4379,3787,824,14136,11868,2150,5041,4035,1051,1403,1066,233],
+];
+
+const CATS=[["gen","GEN","#4f9cff"],["ews","GEN-EWS","#a78bfa"],["obc","OBC-NCL","#f59e0b"],
+            ["sc","SC","#34d399"],["st","ST","#f87171"]];
+const D=RAW.map(r=>{
+  const o={code:r[0],name:r[1]};
+  CATS.forEach((c,i)=>{const b=2+i*3;o[c[0]]={reg:r[b],app:r[b+1],qua:r[b+2]};});
+  o.tot={reg:0,app:0,qua:0};
+  CATS.forEach(c=>{o.tot.reg+=o[c[0]].reg;o.tot.app+=o[c[0]].app;o.tot.qua+=o[c[0]].qua;});
+  return o;
+});
+const fmt=n=>n.toLocaleString('en-IN');
+const sum=(f)=>D.reduce((a,d)=>a+f(d),0);
+
+// KPIs: per category totals
+const stageName={reg:"Registered",app:"Appeared",qua:"Qualified"};
+document.getElementById('kpis').innerHTML=CATS.map(c=>{
+  const reg=sum(d=>d[c[0]].reg),app=sum(d=>d[c[0]].app),qua=sum(d=>d[c[0]].qua);
+  const totReg=sum(d=>d.tot.reg);
+  return `<div class="kpi"><div class="label" style="color:${c[2]}">${c[1]}</div>
+    <div class="val">${fmt(reg)}</div>
+    <div class="d">${(reg/totReg*100).toFixed(1)}% of all reg · ${(qua/app*100).toFixed(1)}% qualified</div></div>`;
+}).join('');
+
+Chart.defaults.color='#9aa7b8';Chart.defaults.font.size=11;Chart.defaults.borderColor='#2a3242';
+
+// Single paper
+let stage='reg',paperBar,paperPie;
+const sel=document.getElementById('paperSel');
+sel.innerHTML=D.map((d,i)=>`<option value="${i}">${d.code} — ${d.name}</option>`).join('');
+sel.value=D.findIndex(d=>d.code==='CS');
+function drawPaper(){
+  const d=D[+sel.value];
+  const vals=CATS.map(c=>d[c[0]][stage]);
+  const cols=CATS.map(c=>c[2]);const labs=CATS.map(c=>c[1]);
+  if(paperBar)paperBar.destroy();if(paperPie)paperPie.destroy();
+  paperBar=new Chart(document.getElementById('paperBar'),{type:'bar',
+    data:{labels:labs,datasets:[{label:stageName[stage],data:vals,backgroundColor:cols}]},
+    options:{maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{y:{ticks:{callback:v=>v>=1000?(v/1000)+'k':v}}}}});
+  paperPie=new Chart(document.getElementById('paperPie'),{type:'doughnut',
+    data:{labels:labs,datasets:[{data:vals,backgroundColor:cols}]},
+    options:{maintainAspectRatio:false,plugins:{legend:{position:'right'},
+      tooltip:{callbacks:{label:c=>c.label+': '+fmt(c.raw)+' ('+(c.raw/vals.reduce((a,b)=>a+b)*100).toFixed(1)+'%)'}}}}});
+  document.getElementById('paperStats').innerHTML=
+    `<b>${d.name}</b> — Registered ${fmt(d.tot.reg)} · Appeared ${fmt(d.tot.app)} (${(d.tot.app/d.tot.reg*100).toFixed(1)}%) · `+
+    `Qualified ${fmt(d.tot.qua)} (${(d.tot.qua/d.tot.app*100).toFixed(1)}% of appeared). `+
+    `Reserved-category share of registrations: ${((1-d.gen.reg/d.tot.reg)*100).toFixed(1)}%.`;
+}
+sel.onchange=drawPaper;
+[["sReg","reg"],["sApp","app"],["sQua","qua"]].forEach(([id,st])=>{
+  document.getElementById(id).onclick=()=>{stage=st;
+    ["sReg","sApp","sQua"].forEach(x=>document.getElementById(x).classList.remove('active'));
+    document.getElementById(id).classList.add('active');drawPaper();};
+});
+drawPaper();
+
+// Stacked composition
+let stackChart,stackMode='pct';
+const sStack=[...D].sort((a,b)=>b.tot.reg-a.tot.reg);
+function drawStack(){
+  if(stackChart)stackChart.destroy();
+  const ds=CATS.map(c=>({label:c[1],backgroundColor:c[2],
+    data:sStack.map(d=> stackMode==='pct' ? +(d[c[0]].reg/d.tot.reg*100).toFixed(1) : d[c[0]].reg)}));
+  stackChart=new Chart(document.getElementById('stackChart'),{type:'bar',
+    data:{labels:sStack.map(d=>d.code),datasets:ds},
+    options:{indexAxis:'y',maintainAspectRatio:false,
+      plugins:{legend:{position:'top'},tooltip:{callbacks:{
+        afterTitle:i=>sStack[i[0].dataIndex].name,
+        label:c=>c.dataset.label+': '+(stackMode==='pct'?c.raw+'%':fmt(c.raw))}}},
+      scales:{x:{stacked:true,max:stackMode==='pct'?100:undefined,
+        title:{display:true,text:stackMode==='pct'?'% of registrations':'registrations'}},
+        y:{stacked:true,ticks:{autoSkip:false}}}}});
+}
+document.getElementById('mPct').onclick=()=>{stackMode='pct';mPct.classList.add('active');mAbs.classList.remove('active');drawStack();};
+document.getElementById('mAbs').onclick=()=>{stackMode='abs';mAbs.classList.add('active');mPct.classList.remove('active');drawStack();};
+drawStack();
+
+// Qualification + appearance rate by category (aggregate)
+const qRate=CATS.map(c=>{const app=sum(d=>d[c[0]].app),qua=sum(d=>d[c[0]].qua);return +(qua/app*100).toFixed(1);});
+const aRate=CATS.map(c=>{const reg=sum(d=>d[c[0]].reg),app=sum(d=>d[c[0]].app);return +(app/reg*100).toFixed(1);});
+new Chart(document.getElementById('qualChart'),{type:'bar',
+  data:{labels:CATS.map(c=>c[1]),datasets:[
+    {label:'Appearance rate (appeared/registered)',data:aRate,backgroundColor:'#2d4a7c'},
+    {label:'Qualification rate (qualified/appeared)',data:qRate,backgroundColor:'#34d399'}]},
+  options:{maintainAspectRatio:false,plugins:{legend:{position:'top'},
+    tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.raw+'%'}}},
+    scales:{y:{max:90,title:{display:true,text:'%'}}}}});
+
+// Table
+let curCat='all',sortK='reg',sortDir=-1;
+const thead=document.querySelector('#tbl thead'),tbody=document.querySelector('#tbl tbody');
+function cell(d){return curCat==='all'?d.tot:d[curCat];}
+function render(){
+  thead.innerHTML='<tr>'+['code','name','reg','app','qua','arate','qrate'].map(k=>{
+    const t={code:'Code',name:'Paper',reg:'Registered',app:'Appeared',qua:'Qualified',arate:'Appear %',qrate:'Qual %'}[k];
+    return `<th data-k="${k}">${t}${sortK===k?(sortDir<0?' ▼':' ▲'):''}</th>`;}).join('')+'</tr>';
+  const q=document.getElementById('search').value.toLowerCase();
+  let rows=D.filter(d=>d.code.toLowerCase().includes(q)||d.name.toLowerCase().includes(q));
+  const getv=(d,k)=>{const c=cell(d);
+    if(k==='code')return d.code;if(k==='name')return d.name;
+    if(k==='arate')return +(c.app/c.reg*100).toFixed(1);
+    if(k==='qrate')return c.app?+(c.qua/c.app*100).toFixed(1):0;
+    return c[k];};
+  rows.sort((a,b)=>{let x=getv(a,sortK),y=getv(b,sortK);
+    return typeof x==='string'?sortDir*x.localeCompare(y):sortDir*(x-y);});
+  tbody.innerHTML=rows.map(d=>{const c=cell(d);
+    return '<tr><td>'+d.code+'</td><td>'+d.name+'</td><td>'+fmt(c.reg)+'</td><td>'+fmt(c.app)+
+      '</td><td>'+fmt(c.qua)+'</td><td>'+(c.app/c.reg*100).toFixed(1)+'%</td><td>'+
+      (c.app?(c.qua/c.app*100).toFixed(1):'0')+'%</td></tr>';}).join('');
+  thead.querySelectorAll('th').forEach(th=>th.onclick=()=>{const k=th.dataset.k;
+    if(sortK===k)sortDir*=-1;else{sortK=k;sortDir=-1;}render();});
+}
+document.getElementById('search').oninput=render;
+document.getElementById('catSel').onchange=e=>{curCat=e.target.value;render();};
+render();
+
+document.getElementById('note2025').innerHTML=
+ `This dashboard uses the <b>official GATE 2024 Statistical & Performance Report (IISc)</b>, the most recent report that `+
+ `publishes the full per-paper × per-category counts (Section 3). The <b>GATE 2025 report</b> you linked exists but its server `+
+ `does not return extractable text to the web tool. To add 2025 side-by-side, save `+
+ `<code>GATE2025StatisticalAndPerformanceReportWebVersion.pdf</code> into your Gate folder and I'll extract the identical `+
+ `tables and merge them in. Note: GATE 2024 reports OBC as OBC-NCL and lists EWS separately as GEN-EWS.`;
+
+document.getElementById('foot').innerHTML=
+ `Source: GATE 2024 Statistical & Performance Report, Section 3 (Paper-wise, Category-wise Counts of Registered, Appeared & `+
+ `Qualified Candidates), Indian Institute of Science. All rates computed in-browser. PwD candidates are counted within their `+
+ `social category in this table. Prepared June 2026.`;
+</script>
+</body>
+</html>
