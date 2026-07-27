@@ -159,6 +159,13 @@
   <div id="progressbar"><div></div></div>
 </div>
 
+<div class="card">
+  <strong>📊 Reference dashboards:</strong>
+  <a href="gate-2025-2026-analysis.html">GATE 2025 vs 2026 — cut-offs &amp; participation</a> ·
+  <a href="gate-category-distribution.html">GATE 2024 — category distribution by paper</a>
+  <div class="muted" style="margin-top:.3rem">Interactive analyses built from the official GATE statistical reports. The competition context they show: DA had ~91.7k registrations in 2026 (+21% YoY, GEN cut-off 26.4) — the field is growing fast; ST is tiny (~3.3k registered, cut-off 30.4), which is why its rank comes cheaper for the same math core.</div>
+</div>
+
 <details class="sec">
   <summary><span class="num">1</span>Why this plan looks like this</summary>
   <div class="body">
@@ -413,7 +420,7 @@
         <tr><td class="ck"><input type="checkbox" data-k="w27"></td><td>27</td><td>Jan 16–22</td><td><span class="mock">Sun Jan 17: FULL DA MOCK #6</span> + CS-overlap PYQs. Formula sheet v2</td><td>Autopsy + timed GA sets</td></tr>
         <tr><td class="ck"><input type="checkbox" data-k="w28"></td><td>28</td><td>Jan 23–29</td><td><span class="mock">Sun Jan 24: FULL ST MOCK #3</span> + error-log drilling</td><td>Speed drills on calculation-error topics</td></tr>
         <tr><td class="ck"><input type="checkbox" data-k="w29"></td><td>29</td><td>Jan 30–Feb 5</td><td><span class="mock">Sun Jan 31: FULL DA MOCK #7 — dress rehearsal in the real exam time-slot</span></td><td>Light: formula sheets + error log only. No new material after Wed</td></tr>
-        <tr><td class="ck"><input type="checkbox" data-k="w30"></td><td>30</td><td>Exam week</td><td colspan="2">Expected first two weekends of Feb 2027. Sleep well, formula sheets only, admit card + logistics sorted early. Go get it.</td></tr>
+        <tr><td class="ck"><input type="checkbox" data-k="w30"></td><td>30</td><td>Exam window</td><td colspan="2">Official window: Feb 6–7, 13–14, 20–21, 2027. Your papers' exact sessions come with the admit card (city allotment Jan 4) — if DA/ST land on a later weekend, that's bonus revision time, same routine. Sleep well, formula sheets only. Go get it.</td></tr>
       </tbody>
     </table>
     </div>
@@ -435,7 +442,7 @@
   <label class="check"><input type="checkbox" data-k="m7"><span><strong>Dec 27</strong> — Coverage freeze: AI + Python/DSA/DBMS pass complete</span></label>
   <label class="check"><input type="checkbox" data-k="m8"><span><strong>Late Dec</strong> — DA mock ≥ 45</span></label>
   <label class="check"><input type="checkbox" data-k="m9"><span><strong>Mid Jan</strong> — DA mock ≥ 60</span></label>
-  <label class="check"><input type="checkbox" data-k="m10"><span><strong>Registration (Aug–Sep)</strong> — Registered DA primary + ST secondary; re-verified 2027 two-paper table</span></label>
+  <label class="check"><input type="checkbox" data-k="m10"><span><strong>Aug 14 – Sep 21</strong> — Register DA primary + ST secondary at gate2027.iitm.ac.in (₹1,800/paper General; late fee until Sep 30). DA+ST confirmed allowed in the official 2027 table</span></label>
   </div>
 </details>
 
@@ -506,8 +513,8 @@
   <ul>
     <li><strong>Time budget is the #1 risk.</strong> 12–15 unpredictable hrs/week makes single-digit rank a long shot; the plan protects the score <em>floor</em> (top-200 + strong score) even in partial success.</li>
     <li><strong>ST dilution</strong> is capped by the 75/25 split and the sacrifice order.</li>
-    <li><strong>GATE 2027 specifics</strong> (exact dates, organizing institute, syllabus tweaks, two-paper table) publish ~Aug–Sep 2026 — re-verify at registration.</li>
-    <li><strong>M.Tech DS/AI</strong> at IISc / top IITs via DA rank; <strong>NUS/NTU</strong> via GATE score targets the 2028 intake (applications late 2027; IELTS needed) — post-exam workstream.</li>
+    <li><strong>Official GATE 2027 facts (confirmed, IIT Madras):</strong> exams Feb 6–7, 13–14, 20–21 · registration Aug 14 – Sep 21 (late fee to Sep 30) · city allotment Jan 4 · results Mar 19, 2027 · fee ₹1,800/paper (General), so both papers ≈ ₹3,600. The <strong>DA syllabus is unchanged</strong> from 2024–26 (verified against the official PDF) and <strong>DA+ST is an allowed combination</strong> in the official two-paper table — this plan needs no content changes.</li>
+    <li><strong>M.Tech DS/AI</strong> at IISc / top IITs via DA rank; <strong>NUS/NTU</strong> via GATE score (results Mar 19) targets the 2028 intake (applications late 2027; IELTS needed) — post-exam workstream.</li>
   </ul>
   </div>
 </details>
@@ -552,7 +559,7 @@
 </details>
 
 <footer>
-  Plan drafted 15 July 2026 · Exam expected first two weekends of February 2027 · Ticks are stored only in this browser (localStorage)
+  Plan drafted 15 July 2026 · Updated 27 July 2026 with official GATE 2027 notification (IIT Madras) · Exam window Feb 6–21, 2027 · Ticks are stored only in this browser (localStorage)
 </footer>
 
 </div>
@@ -564,7 +571,7 @@
   function tick() {
     var days = Math.ceil((exam - new Date()) / 86400000);
     document.getElementById('countdown').textContent = days > 0
-      ? days + ' days to the expected exam window (Feb 6, 2027)'
+      ? days + ' days to GATE 2027 (Feb 6–21 · IIT Madras · official)'
       : 'Exam window reached — go get it.';
   }
   tick();
